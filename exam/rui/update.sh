@@ -1,0 +1,1 @@
+pip3 list --outdated --format=freeze |awk '{print $1}' |xargs sudo -H pip3 install -U
