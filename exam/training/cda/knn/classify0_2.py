@@ -1,11 +1,11 @@
 
 import pandas as pd
 
-#       优化版
+#       模型优化专用方法（合理使用groupby）
 #       使用高级数据结构优化算法
 #       引入 NumPy 和 Pandas，更快的执行效率、简化的IO、设计过程中更简洁
 #       可加快分析流程
-def classify0_1(train, test, k):
+def classify0_2(train, test, k):
     """
     :param train:   训练集
     :param test:    测试集
@@ -39,11 +39,14 @@ def classify0_1(train, test, k):
         - ascending: 默认为TRUE（升序排列），若要降序则设置为FALSE
         """
         dr = dist_l.sort_values(by='dist')[: k]
-
+        # 新增代码部分
+        dr['re'] = 1 / dr.iloc[:, 0]
         """
         对DR对象进行labels出现次数的计数，求出结果
         """
-        re = dr.loc[:, 'labels'].value_counts()
+        re = dr.groupby('labels').sum()
+        re.sort_values(by = 're', ascending = False)
+        ## 旧代码 re = dr.loc[:, 'labels'].value_counts()
 
         """
         re为最终保留的计数结果Series，最后选择计数排名第一的结果为最终预测类别

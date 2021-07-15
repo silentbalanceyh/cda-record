@@ -1,5 +1,5 @@
 import numpy as np
-# 函数2：基础版
+#       基础版
 #       手动构造KNN分类器，分类器1
 #       调用如：classify0([0,0], group, labels, 3)
 def classify0(inX, dataSet, labels, k):

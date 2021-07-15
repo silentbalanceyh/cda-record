@@ -62,7 +62,7 @@ result = knn.classify0_1(train, test, 3)
 1   2   1       A
 """
 print(result)
-g.nearestPoint(train, result)
+g.gNearestPoint(train, result)
 # # 2. 执行KNN并可视化呈现结果
 # result.columns = ['x1', 'x2', 'labels']
 # print(result)
