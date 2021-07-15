@@ -15,6 +15,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import cda.knn as knn
+import cda.g as g
 """
 「2」函数定义部分
 """
@@ -61,22 +62,22 @@ result = knn.classify0_1(train, test, 3)
 1   2   1       A
 """
 print(result)
-
-# 2. 执行KNN并可视化呈现结果
-result.columns = ['x1', 'x2', 'labels']
-print(result)
-
-# 和train数据集进行拼接
-input = pd.concat([train, result], ignore_index= True)
-print(input)
-
-# 拼接完成后设置指标用于作图
-# - 第一列用于标识字符串标签对应的数值型标签
-# - 第二列用于标识区分测试集和训练集
-input['Ind1'] = 1
-for i in range(input.shape[0]):
-    if 'B' == input.iloc[i, 2]:
-        input.iloc[i, 3] = 0
-input['Ind2'] = [1,1,1,1,1,0.5,0.5]
-plt.scatter(input.iloc[:, 0], input.iloc[:, 1], s = 200 * input.iloc[:, 4], c = input.iloc[:, 3])
-plt.show()
+g.nearestPoint(train, result)
+# # 2. 执行KNN并可视化呈现结果
+# result.columns = ['x1', 'x2', 'labels']
+# print(result)
+#
+# # 和train数据集进行拼接
+# input = pd.concat([train, result], ignore_index= True)
+# print(input)
+#
+# # 拼接完成后设置指标用于作图
+# # - 第一列用于标识字符串标签对应的数值型标签
+# # - 第二列用于标识区分测试集和训练集
+# input['Ind1'] = 1
+# for i in range(input.shape[0]):
+#     if 'B' == input.iloc[i, 2]:
+#         input.iloc[i, 3] = 0
+# input['Ind2'] = [1,1,1,1,1,0.5,0.5]
+# plt.scatter(input.iloc[:, 0], input.iloc[:, 1], s = 200 * input.iloc[:, 4], c = input.iloc[:, 3])
+# plt.show()
