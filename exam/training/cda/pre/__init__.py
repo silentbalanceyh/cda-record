@@ -1,1 +1,2 @@
-from cda.pre.randSplit import randSplit
+from cda.pre.splitting import *
+from cda.pre.normalization import *

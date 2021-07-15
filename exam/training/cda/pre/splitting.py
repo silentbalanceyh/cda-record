@@ -1,6 +1,6 @@
 import random
 # 切分数据集
-def randSplit(dataSet, rate):
+def splitRate(dataSet, rate):
     l = list(dataSet.index)
     random.shuffle(l)
     n = dataSet.shape[0]

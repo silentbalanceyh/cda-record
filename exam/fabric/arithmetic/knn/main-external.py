@@ -16,7 +16,7 @@ iris.columns = [
     'class'
 ]
 # 手动切分数据集
-train, test = pre.randSplit(iris, 0.8)
+train, test = pre.splitRate(iris, 0.8)
 print(train.head())
 print(test.head())
 # 训练集
