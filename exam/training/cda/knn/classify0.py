@@ -1,31 +1,4 @@
-"""
-KNN算法详细代码实现（自己实现KNN流程）
-"""
-
-"""
-「1」导入部分
-
-导入必要的包，如果是在Jupyter中，需要执行下边代码以保证绘图
-
-%matplotlib inline
-"""
-
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-"""
-「2」函数定义部分
-"""
-
-
-# 函数1：定义创建数据集的函数
-def createDataSet():
-    group = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
-    labels = ['A', 'A', 'B', 'B']
-    return group, labels
-
-
 # 函数2：基础版
 #       手动构造KNN分类器，分类器1
 #       调用如：classify0([0,0], group, labels, 3)
@@ -51,9 +24,9 @@ def classify0(inX, dataSet, labels, k):
     '''
     利用np.tile方法将输入测试数据张成一个行数和训练集行数相同、列数为1 * 测试数据列数的二维数组（矩阵），用于和输入数据计算距离使用，
     其中tile函数的用法参考
-    
+
     fabric/segment/numpy/np.tile.py
-    
+
     最后张成的 4 * 2 的数组就能够和输入数组集进行减法运算了，当然，由于np.array的广播功能，也可以直接运算
     '''
     diffMat = np.tile(inX, (dataSetSize, 1)) - dataSet
@@ -82,7 +55,7 @@ def classify0(inX, dataSet, labels, k):
 
     '''
     定义空字典，这是在使用 python 基础数据格式进行算法设计时对元素个数进行计数最常用的手段
-    
+
     使用字典进行计数时，把需要计数的对象设置成Key，计数对象累积计数值为Value，配合循环进行计数
     '''
     classCount = {}
@@ -113,115 +86,3 @@ def classify0(inX, dataSet, labels, k):
     此处注意，dict_items对象本身不能进行索引，要利用可便利性转换为list，此时的list为原字典key-value组成的元组所组成的list
     '''
     return sortedClassCount[0][0]
-
-
-# 函数3：优化版
-#       使用高级数据结构优化算法
-#       引入 NumPy 和 Pandas，更快的执行效率、简化的IO、设计过程中更简洁
-#       可加快分析流程
-def classify0_1(train, test, k):
-    """
-    :param train:   训练集
-    :param test:    测试集
-    :param k:       选取最近邻作为判别标准的个数
-    :return:
-    """
-    n = train.shape[1] - 1
-    m = test.shape[0]
-    result = []
-    """
-    利用 DataFrame 字典属性执行数据导入，结合导入结果可进一步调整数据集列的顺序，符合数据分析习惯
-    思考：
-    1. 为何此处利用字典生成DF后会"乱序"
-    2. 为何不用数组拼接方式生成DF
-    """
-    for i in range(m):
-        """
-        利用NumPy数据格式特性优化算法执行流程，首先计算各点之间距离，此处可使用NumPy的广播特性计算，
-        Pandas由于架设在NumPy之上，所以也支持广播
-        """
-        dist = list(((train.iloc[:, :n] - test.iloc[i, :n]) ** 2).sum(1))
-
-        """
-        利用DF构建dist和labels之间关系，此处不再使用字典进行关系构造，而直接构造一个临时的DF保存距离和对应标签
-        """
-        dist_l = pd.DataFrame({'dist': dist, 'labels': (train.iloc[:, n])})
-
-        """
-        然后寻找距离最近的k个训练集样本点
-        - by：排序的字段
-        - ascending: 默认为TRUE（升序排列），若要降序则设置为FALSE
-        """
-        dr = dist_l.sort_values(by='dist')[: k]
-
-        """
-        对DR对象进行labels出现次数的计数，求出结果
-        """
-        re = dr.loc[:, 'labels'].value_counts()
-
-        """
-        re为最终保留的计数结果Series，最后选择计数排名第一的结果为最终预测类别
-        """
-        result.append(re.index[0])
-    result = pd.Series(result)
-    test['predict'] = result
-    return test
-
-
-"""
-「3」代码执行主流程
-"""
-
-group, labels = createDataSet()
-# 显示图片
-plt.plot(group[:, 0], group[:, 1], 'ro')
-plt.show()
-
-# 1. 执行KNN
-# 维度不一样时使用链接
-# vstack - 纵向链接
-# hstack - 横向链接
-train = np.vstack([group, [0, 0]])
-labels.append('B')
-# 生成DataFrame
-train = pd.DataFrame({
-    'x1': train[:, 0],
-    'x2': train[:, 1],
-    'labels': labels
-})
-train = train.reindex(['x1'] + ['x2'] + ['labels'], axis=1)
-# 创建测试集
-p1 = [1, 2]
-p2 = [0, 1]
-test = pd.DataFrame({
-    'x1': p1,
-    'x2': p2
-})
-# 测试算法运行
-result = classify0_1(train, test, 3)
-"""
-运行结果
-   x1  x2 predict
-0   1   0       B
-1   2   1       A
-"""
-print(result)
-
-# 2. 执行KNN并可视化呈现结果
-result.columns = ['x1', 'x2', 'labels']
-print(result)
-
-# 和train数据集进行拼接
-input = pd.concat([train, result], ignore_index= True)
-print(input)
-
-# 拼接完成后设置指标用于作图
-# - 第一列用于标识字符串标签对应的数值型标签
-# - 第二列用于标识区分测试集和训练集
-input['Ind1'] = 1
-for i in range(input.shape[0]):
-    if 'B' == input.iloc[i, 2]:
-        input.iloc[i, 3] = 0
-input['Ind2'] = [1,1,1,1,1,0.5,0.5]
-plt.scatter(input.iloc[:, 0], input.iloc[:, 1], s = 200 * input.iloc[:, 4], c = input.iloc[:, 3])
-plt.show()
