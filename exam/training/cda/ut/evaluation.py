@@ -48,4 +48,7 @@ def evaCrossVali(dataSet, randSplit, classify, n, k):
         test = pd.DataFrame(test.drop(['predict'], axis = 1))
         sp.append(test)
     return result, result.mean(), result.var()
+# 轮廓系数
+def evaSilhouetteCoe(result_set):
+    return
 
