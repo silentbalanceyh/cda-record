@@ -29,3 +29,10 @@ plt.show()
 
 # 在已有数据集上进行测试
 test_SSE = g.gKcLearningCurve(testSet)
+
+# 第二种算法
+test_cent, test_cluster = kmeans.biKmeans(test_set, 4)
+# 查看最终结果
+plt.scatter(test_cluster.iloc[:,0], test_cluster.iloc[:,1], c = test_cluster.iloc[:,-1])
+plt.plot(test_cent[:, 0], test_cent[:, 1], 'o', color = 'red')
+plt.show()
