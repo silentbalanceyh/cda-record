@@ -1,7 +1,7 @@
 import pandas as pd
 
-import cda.pre as pre
-import cda.knn as knn
+import cda.ut as ut
+import cda.ag.knn as knn
 
 pd.set_option('display.width', 200)            # 打印宽度
 pd.set_option('display.max_columns', None)      # 打印最大列
@@ -16,7 +16,7 @@ iris.columns = [
     'class'
 ]
 # 手动切分数据集
-train, test = pre.splitRate(iris, 0.8)
+train, test = ut.splitRate(iris, 0.8)
 print(train.head())
 print(test.head())
 # 训练集

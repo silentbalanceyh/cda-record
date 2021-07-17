@@ -1,8 +1,7 @@
 import numpy as np
 # 多分类模型准确率
 import pandas as pd
-
-
+# 计算精准率
 def evaAccuracy(dataSet):
     m = dataSet.shape[0]
     res = (dataSet.iloc[:, -1] == dataSet.iloc[:, -2]).value_counts()

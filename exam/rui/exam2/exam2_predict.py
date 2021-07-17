@@ -49,8 +49,8 @@ with open(model_dir + 'enc.model', 'rb') as file:
 # assign the best model according to model scores
 best_model = xgboost_model
 
-# data pre-process step 1, wrong, outlier
-print("data pre-process step 1, wrong, outlier")
+# data ut-process step 1, wrong, outlier
+print("data ut-process step 1, wrong, outlier")
 pipe = Pipeline(
         [
          ('wrong_fillna', wrong_value_fillna(wrong_value=['.', '?'])),
@@ -59,8 +59,8 @@ pipe = Pipeline(
          ])
 x_ = pipe.fit_transform(x_)
 
-# data pre-process step 2, fillna, encode for num
-print("data pre-process step 2, fillna, encode for num type")
+# data ut-process step 2, fillna, encode for num
+print("data ut-process step 2, fillna, encode for num type")
 features_names = x_.columns.values.tolist()
 categorical_features = ['B0002','B0009','B0013','B0019']
 numerical_features = [i for i in features_names if i not in categorical_features]
@@ -77,12 +77,12 @@ preprocessor = ColumnTransformer(transformers=[
 )
 X = preprocessor.fit_transform(x_)
 
-# data pre-process step 3, encode for cat type
-print("data pre-process step 3, encode for cat type")
+# data ut-process step 3, encode for cat type
+print("data ut-process step 3, encode for cat type")
 catColumns = X[:,0:len(categorical_features)]
 tmpOneHot = oneHotEncoder.transform(catColumns).A
 
-# data pre-process step 4, pca before predicting
+# data ut-process step 4, pca before predicting
 pca_model = PCA(n_components=30)
 tmpOneHot = pca_model.fit_transform(tmpOneHot)
 print("tmpOneHot pca to:", pca_model.n_components_)

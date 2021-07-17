@@ -2,7 +2,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import cda.pre as pre
+import cda.ut as ut
 # 绘制散点图工具函数
 def gNearestPoint(train, result):
     global output
@@ -35,7 +35,7 @@ def gKLearningCurve(classify, train, test, k):
     """
     yAc = []
     for i in range(k):
-        yAc.append(pre.evaAccuracy(classify(train, test, i + 1)))
+        yAc.append(ut.evaAccuracy(classify(train, test, i + 1)))
     plt.plot(range(1, k+1), yAc, '-o', color='black')
     return yAc
 
@@ -53,7 +53,7 @@ def gKLearningCurve_1(dataSet, classify, n, k):
     yAc_up = []
     yAc_down = []
     for i in range(k):
-        result_cv, result_mean, result_var = pre.evaCrossVali(dataSet, pre.splitN, classify, n, i + 1)
+        result_cv, result_mean, result_var = ut.evaCrossVali(dataSet, ut.splitN, classify, n, i + 1)
         yAc_mean.append(result_mean)
         yAc_up.append(result_mean + result_var)
         yAc_down.append(result_mean - result_var)

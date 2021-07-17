@@ -34,8 +34,8 @@ print("input y:", Counter(train_df['Target']))
 # print(train_df.head(10))
 train_df.drop('B0001', inplace=True, axis=1)  # drop id column
 
-# data pre-process step 1, wrong, outlier
-print("data pre-process step 1, wrong, outlier")
+# data ut-process step 1, wrong, outlier
+print("data ut-process step 1, wrong, outlier")
 labelEncoder = LabelEncoder()
 y_ = labelEncoder.fit_transform(train_df['Target'])
 x_ = train_df.drop('Target', axis=1)  # drop id column
@@ -46,8 +46,8 @@ pipe = Pipeline(
          ('fix', fix_outlier(how='quartile'))
          ])
 x_ = pipe.fit_transform(x_, y_)
-# data pre-process step 2, fillna, encode for num type
-print("data pre-process step 2, fillna, encode for num type")
+# data ut-process step 2, fillna, encode for num type
+print("data ut-process step 2, fillna, encode for num type")
 features_names = x_.columns.values.tolist()
 categorical_features = ['B0002','B0009','B0013','B0019']
 numerical_features = [i for i in features_names if i not in categorical_features]
@@ -65,14 +65,14 @@ preprocessor = ColumnTransformer(transformers=[
 )
 x_ = preprocessor.fit_transform(x_)
 
-# data pre-process step 3, encode for cat type
-print("data pre-process step 3, encode for cat type")
+# data ut-process step 3, encode for cat type
+print("data ut-process step 3, encode for cat type")
 enc = OneHotEncoder(handle_unknown='ignore')
 catColumns = x_[:,0:len(categorical_features)]  # pick up those cat columns
 enc.fit(catColumns)
 tmpOneHot = enc.transform(catColumns).A # transform to onehot code, and convert to ndarray
 
-# data pre-process step 4, pca on onehot part
+# data ut-process step 4, pca on onehot part
 pca_model = PCA(n_components=30)
 tmpOneHot = pca_model.fit_transform(tmpOneHot)
 print("tmpOneHot pca to:", pca_model.n_components_)

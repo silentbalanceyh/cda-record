@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import cda.knn as knn
+import cda.ag.knn as knn
 import cda.g as g
 """
 「2」函数定义部分

@@ -1,4 +1,5 @@
 import random
+import numpy as np
 # 切分数据集
 def splitRate(dataSet, rate):
     l = list(dataSet.index)
@@ -26,3 +27,19 @@ def splitN(dataSet, n):
             splitSet.append(dataSet.loc[range(i * int(k), m), :])
     dataSet.index = range(dataSet.shape[0])
     return splitSet
+
+# 自动生成随机质心函数
+def dotCenter(dataSet, k):
+    n = dataSet.shape[1]
+    data_min = dataSet.iloc[:, :n-1].min()
+    data_max = dataSet.iloc[:, :n-1].max()
+    data_mid = (data_max + data_min) / 2
+    data_ran = (data_max - data_min) / 2
+    data_cent_o = np.random.random((k, n-1))
+    data_cent = data_cent_o * list(data_ran) + list(data_mid)
+    return data_cent
+
+# 欧式距离
+def distEclud(arrayA, arrayB):
+    dist_o = arrayA - arrayB
+    return np.sum(np.power(dist_o, 2), axis=1)
