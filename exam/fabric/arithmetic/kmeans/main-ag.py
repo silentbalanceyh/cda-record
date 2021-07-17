@@ -1,0 +1,27 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+import cda.ag.kmeans as kmeans
+# 算法验证
+testSet = pd.read_table("data/testSet.txt", header= None)
+print(testSet.head())
+print(testSet.shape)
+
+# 二维平面观察分布
+plt.plot(testSet.iloc[:, 0], testSet.iloc[:, 1], 'o')
+plt.show()
+
+ze = pd.DataFrame(np.zeros(80).reshape(-1, 1))
+test_set = pd.concat([testSet, ze], axis= 1, ignore_index=True)
+print(test_set.head())
+
+# 算法调用验证
+test_cent, test_cluster = kmeans.kMeans(test_set, 4)
+print(test_cent)
+print(test_cluster.head())
+
+# 查看最终结果
+plt.scatter(test_cluster.iloc[:,0], test_cluster.iloc[:,1], c = test_cluster.iloc[:,-1])
+plt.plot(test_cent[:, 0], test_cent[:, 1], 'o', color = 'red')
+plt.show()

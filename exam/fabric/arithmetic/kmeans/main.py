@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-import cda.ut as pre
+import cda.ut as ut
 # 读取外部数据
 iris = pd.read_csv("data/iris.txt", header= None)
 print(iris.shape)
