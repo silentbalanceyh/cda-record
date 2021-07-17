@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import cda.ut as ut
+import cda.ag.kmeans as kmeans
 # 绘制散点图工具函数
 def gNearestPoint(train, result):
     global output
@@ -61,3 +62,14 @@ def gKLearningCurve_1(dataSet, classify, n, k):
         plt.plot(range(1, k+1), yAc_up, '-o', color='red')
         plt.plot(range(1, k+1), yAc_down, '-o', color='blue')
         return yAc_mean, yAc_up, yAc_down
+
+# 聚类误差平方和的学习曲线
+def gKcLearningCurve(dataSet, cluster = kmeans.kMeans, k = 10):
+    n = dataSet.shape[1]
+    SSE = []
+    for i in range(1, k):
+        centroids, result_set = cluster(dataSet, i+1)
+        SSE.append(result_set.iloc[:, n].sum())
+    plt.plot(range(2, k+1), SSE, '--o')
+    plt.show()
+    return SSE

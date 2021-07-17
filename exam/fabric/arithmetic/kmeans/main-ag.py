@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 import cda.ag.kmeans as kmeans
+import cda.g as g
 # 算法验证
 testSet = pd.read_table("data/testSet.txt", header= None)
 print(testSet.head())
@@ -25,3 +26,6 @@ print(test_cluster.head())
 plt.scatter(test_cluster.iloc[:,0], test_cluster.iloc[:,1], c = test_cluster.iloc[:,-1])
 plt.plot(test_cent[:, 0], test_cent[:, 1], 'o', color = 'red')
 plt.show()
+
+# 在已有数据集上进行测试
+test_SSE = g.gKcLearningCurve(testSet)
