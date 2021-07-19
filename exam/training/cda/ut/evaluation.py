@@ -76,4 +76,18 @@ def evaSilhouetteCoe(result_set, centroids):
         result_set.loc[i, 'b'] = np.array(l_temp).max()
     result_set['s'] = (result_set.loc[:, 'b'] - result_set.loc[:, 'a']) / result_set.loc[:, "a":"b"].max(axis = 1)
     return result_set['s'].mean()
-
+# SSE 计算（残差平方和）
+def evaSseCal(dataSet, regress):
+    n = dataSet.shape[0]
+    y = dataSet.iloc[:, -1].values
+    ws = regress(dataSet)
+    yhat = dataSet.iloc[:, :-1].values * ws
+    yhat = yhat.reshape([n,])
+    rss = np.power(yhat - y, 2).sum()
+    return rss
+# R-Square计算
+def evaRSquare(dataSet, regress):
+    sse = evaSseCal(dataSet, regress)
+    y = dataSet.iloc[:, -1].values
+    sst = np.power(y - y.mean(), 2).sum()
+    return 1 - sse / sst

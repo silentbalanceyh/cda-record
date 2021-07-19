@@ -1,9 +1,11 @@
 # 将绘图处理成函数
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 import cda.ut as ut
 import cda.ag.kmeans as kmeans
+import cda.ag.linear as lg
 # 绘制散点图工具函数
 def gNearestPoint(train, result):
     global output
@@ -73,3 +75,19 @@ def gKcLearningCurve(dataSet, cluster = kmeans.kMeans, k = 10):
     plt.plot(range(2, k+1), SSE, '--o')
     plt.show()
     return SSE
+
+# 手动绘制岭迹图
+def gRidge(dataSet):
+    xMat = np.mat(dataSet.iloc[:, :-1].values)
+    yMat = np.mat(dataSet.iloc[:, -1].values).T
+    yMean = np.mean(yMat, axis= 0)
+    yMat = yMat - yMean
+    xMeans = np.mean(xMat, axis= 0)
+    xVar = np.var(xMeans, axis= 0)
+    xMat = (xMat - xMeans) / xVar
+    numTest = 30
+    wMat = np.zeros((numTest, xMat.shape[1]))
+    for i in range(numTest):
+        ws = lg.regresRidge(dataSet, np.exp(i - 10))
+        wMat[i, :] = ws.T
+    return wMat
