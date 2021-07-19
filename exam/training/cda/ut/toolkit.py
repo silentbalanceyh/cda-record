@@ -43,3 +43,7 @@ def dotCenter(dataSet, k):
 def distEclud(arrayA, arrayB):
     dist_o = arrayA - arrayB
     return np.sum(np.power(dist_o, 2), axis=1)
+
+# sigmoid 函数
+def sigmoid(inX):
+    return 1.0 / (1 + np.exp(-inX))

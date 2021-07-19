@@ -17,3 +17,11 @@ def normZScore(dataSet):
 def normSigmod(dataSet):
     normSet = 1 / (1 + np.exp(-dataSet))
     return normSet
+
+# 利用 DataFrame 数据格式和矩阵计算梯度下降
+def normRegularize(xMat):
+    inMat = xMat.copy()
+    inMeans = np.mean(inMat, axis = 0)
+    inVar = np.std(inMat, axis = 0)
+    inMat = (inMat - inMeans) / inVar
+    return inMat

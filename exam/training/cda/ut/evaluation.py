@@ -85,6 +85,9 @@ def evaSseCal(dataSet, regress):
     yhat = yhat.reshape([n,])
     rss = np.power(yhat - y, 2).sum()
     return rss
+# RSS 计算
+def evaRssError(yArr, yHatArr):
+    return ((yArr - yHatArr) ** 2).sum()
 # R-Square计算
 def evaRSquare(dataSet, regress):
     sse = evaSseCal(dataSet, regress)
