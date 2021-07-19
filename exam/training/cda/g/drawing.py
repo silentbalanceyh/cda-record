@@ -91,3 +91,8 @@ def gRidge(dataSet):
         ws = lg.regresRidge(dataSet, np.exp(i - 10))
         wMat[i, :] = ws.T
     return wMat
+# 拟合方程专用曲线（多阶多项式拟合结果）
+def gPolyNomial(x, y, deg):
+    p = np.poly1d(np.polyfit(x, y, deg))
+    t = np.linspace(0, 1, 200)
+    plt.plot(x, y, 'ro', t, p(t), '-', t, np.sqrt(t), 'r--')

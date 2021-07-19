@@ -1,6 +1,6 @@
 import random
 import numpy as np
-# 切分数据集
+# 切分数据集 - 决策树辅助
 def splitRate(dataSet, rate):
     l = list(dataSet.index)
     random.shuffle(l)
@@ -12,7 +12,7 @@ def splitRate(dataSet, rate):
     test.index = range(test.shape[0])
     return train, test
 
-# 交叉验证专用数据集切分
+# 交叉验证专用数据集切分 - 决策树辅助
 def splitN(dataSet, n):
     l = list(dataSet.index)
     random.shuffle(l)
@@ -47,3 +47,22 @@ def distEclud(arrayA, arrayB):
 # sigmoid 函数
 def sigmoid(inX):
     return 1.0 / (1 + np.exp(-inX))
+
+# 决策树辅助函数
+# 错误率：Classification Error
+def dtClError(dataSet):
+    m = dataSet.shape[0]
+    iMax = dataSet.iloc[:, -1].value_counts(ascending= False)[0]
+    return 1 - iMax / m
+# 熵函数：Entropy
+def dtEntropy(dataSet):
+    m = dataSet.shape[0]
+    iSet = dataSet.iloc[:, -1].value_counts()
+    p = iSet / m
+    return (-p * np.log2(p)).sum()
+# Gini指数：Gini
+def dtGini(dataSet):
+    m = dataSet.shape[0]
+    iSet = dataSet.iloc[:, -1].value_counts()
+    p = iSet / m
+    return 1 - (np.power(p, 2)).sum()

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from cda.ut.toolkit import distEclud
-# 计算精准率
+# 计算精准率 - 决策树辅助
 def evaAccuracy(dataSet):
     m = dataSet.shape[0]
     res = (dataSet.iloc[:, -1] == dataSet.iloc[:, -2]).value_counts()
@@ -27,7 +27,7 @@ def evaConfusionMatrix(dataSet, pos, neg):
     print("特意度：%f" % dataSet_sp)
     print("F指标：%f" % dataSet_F)
     return [dataSet_ac,dataSet_pr,dataSet_re,dataSet_sp,dataSet_F]
-# 交叉验证
+# 交叉验证 - 决策树辅助
 def evaCrossVali(dataSet, randSplit, classify, n, k):
     """
     :param dataSet:     进行分类测试的数据集
