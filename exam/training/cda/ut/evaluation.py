@@ -1,6 +1,8 @@
 import numpy as np
 # 多分类模型准确率
 import pandas as pd
+
+from cda.ut.toolkit import distEclud
 # 计算精准率
 def evaAccuracy(dataSet):
     m = dataSet.shape[0]
@@ -49,6 +51,29 @@ def evaCrossVali(dataSet, randSplit, classify, n, k):
         sp.append(test)
     return result, result.mean(), result.var()
 # 轮廓系数
-def evaSilhouetteCoe(result_set):
-    return
+def evaSilhouetteCoe(result_set, centroids):
+    m, n = result_set.shape
+    nc = len(centroids)
+    for i in range(nc):
+        result_set[n + i] = 0
+    result_list = []
+    for i in range(nc):
+        result_temp = result_set[result_set.iloc[:, n-1] == i]
+        result_temp.index = range(result_temp.shape[0])
+        result_list.append(result_temp)
+    for i in range(m):
+        for j in range(nc):
+            result_set.iloc[i, n+j] = distEclud(result_set.iloc[i, :n-4].values, result_list[j].iloc[:, :n-4].values).mean()
+    result_set['a'] = 0
+    result_set['b'] = 0
+    for i in range(m):
+        l_temp = []
+        for j in range(nc):
+            if(result_set.iloc[i, n-1] == j):
+                result_set.loc[i, 'a'] = result_set.iloc[i, n+j]
+            else:
+                l_temp.append(result_set.iloc[i, n+j])
+        result_set.loc[i, 'b'] = np.array(l_temp).max()
+    result_set['s'] = (result_set.loc[:, 'b'] - result_set.loc[:, 'a']) / result_set.loc[:, "a":"b"].max(axis = 1)
+    return result_set['s'].mean()
 
