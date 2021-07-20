@@ -9,7 +9,7 @@ def logisticAcc(dataSet, method, eps = 0.01, numIt = 500):
     yMat = np.mat(dataSet.iloc[:, -1].values).T
     xMat = ut.normRegularize(xMat)
     # 执行 sigmod
-    p = ut.sigmoid(xMat * weights).A.flatten()
+    p = ut.vSigmoid(xMat * weights).A.flatten()
     for i, j in enumerate(p):
         if j < 0.5:
             p[i] = 0

@@ -1,33 +1,6 @@
-import random
+
 import numpy as np
-# 切分数据集 - 决策树辅助
-def splitRate(dataSet, rate):
-    l = list(dataSet.index)
-    random.shuffle(l)
-    n = dataSet.shape[0]
-    m = int(n * rate)
-    train = dataSet.loc[range(m), :]
-    test = dataSet.loc[range(m, n), :]
-    dataSet.index = range(dataSet.shape[0])
-    test.index = range(test.shape[0])
-    return train, test
-
-# 交叉验证专用数据集切分 - 决策树辅助
-def splitN(dataSet, n):
-    l = list(dataSet.index)
-    random.shuffle(l)
-    dataSet.index = l
-    m = dataSet.shape[0]
-    splitSet = []
-    k = m / n
-    for i in range(n):
-        if i < (n - 1):
-            splitSet.append(dataSet.loc[range(i * int(k), (i+1)*int(k)),:])
-        else:
-            splitSet.append(dataSet.loc[range(i * int(k), m), :])
-    dataSet.index = range(dataSet.shape[0])
-    return splitSet
-
+# ========================== 点函数
 # 自动生成随机质心函数
 def dotCenter(dataSet, k):
     n = dataSet.shape[1]
@@ -39,16 +12,21 @@ def dotCenter(dataSet, k):
     data_cent = data_cent_o * list(data_ran) + list(data_mid)
     return data_cent
 
+# ========================== 距离函数
 # 欧式距离
 def distEclud(arrayA, arrayB):
     dist_o = arrayA - arrayB
     return np.sum(np.power(dist_o, 2), axis=1)
+# 曼哈顿距离（略）
 
-# sigmoid 函数
-def sigmoid(inX):
+# ========================== 基础函数
+# vSigmoid 函数
+def vSigmoid(inX):
     return 1.0 / (1 + np.exp(-inX))
-
-# 决策树辅助函数
+# vSquare 函数
+def vSquare(x):
+    return x ** 2
+# ========================== 决策树辅助函数
 # 错误率：Classification Error
 def dtClError(dataSet):
     m = dataSet.shape[0]
@@ -66,3 +44,14 @@ def dtGini(dataSet):
     iSet = dataSet.iloc[:, -1].value_counts()
     p = iSet / m
     return 1 - (np.power(p, 2)).sum()
+
+# ========================== 关联规则
+# 创建利用事务集一项集
+def relC1(dataSet):
+    C1 = []
+    for transaction in dataSet:
+        for item in transaction:
+            if not [item] in C1:
+                C1.append([item])
+    C1.sort()
+    return list(map(frozenset, C1))

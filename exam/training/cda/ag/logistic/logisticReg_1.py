@@ -17,6 +17,6 @@ def logisticReg_1(dataSet, eps = 0.01, numIt = 50000):
     m, n = xMat.shape
     weights = np.zeros((n, 1))
     for i in range(m):
-        grad = xMat[i].T * (ut.sigmoid(xMat[i] * weights) - yMat[i])
+        grad = xMat[i].T * (ut.vSigmoid(xMat[i] * weights) - yMat[i])
         weights = weights - eps * grad
     return weights

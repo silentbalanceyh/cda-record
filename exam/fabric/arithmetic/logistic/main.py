@@ -16,7 +16,7 @@ yMat = np.mat(testSet.iloc[:, -1].values).T
 xMat = ut.normRegularize(xMat)
 fRet = (xMat * ws).A.flatten()
 print(fRet)
-p = ut.sigmoid(xMat * ws).A.flatten()
+p = ut.vSigmoid(xMat * ws).A.flatten()
 print(p)
 ## 迭代计算
 for i, j in enumerate(p):

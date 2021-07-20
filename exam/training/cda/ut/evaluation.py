@@ -94,3 +94,21 @@ def evaRSquare(dataSet, regress):
     y = dataSet.iloc[:, -1].values
     sst = np.power(y - y.mean(), 2).sum()
     return 1 - sse / sst
+# 置信度计算函数（频繁二项集）
+def evaConf2(freqSet, H, supportData, brl, minConf = 0.5):
+    prunedH = []
+    for conseq in H:
+        conf = supportData[freqSet] / supportData[freqSet - conseq]
+        if conf >= minConf:
+            print(freqSet - conseq, '-->', conseq, '置信度: ', conf)
+            brl.append((freqSet - conseq, conseq, conf))
+            prunedH.append(conseq)
+    return prunedH
+# 置信度计算（频繁多项集）
+def evaConfN(freqSet, H, supportData, brl, minConf = 0.7, aprioriGen = None):
+    Hmp = True
+    while Hmp:
+        Hmp = False
+        H = evaConf2(freqSet, H, supportData, brl, minConf)
+        H = aprioriGen(H)
+        Hmp = not (H == [] or len(H[0]) == len(freqSet))
