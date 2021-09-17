@@ -1,0 +1,137 @@
+{
+    "": [
+        "readme.md", 
+        "exam", 
+        "nodes", 
+        "personal", 
+        "reference"
+    ], 
+    "exam/case": [
+        "binary_categorical", 
+        "binary_numerical", 
+        "binary_textualized", 
+        "multiclass_matrix", 
+        "multilabel_classification"
+    ], 
+    "exam": [
+        "case", 
+        "qa", 
+        "cda", 
+        "rui", 
+        "run", 
+        "training"
+    ], 
+    "reference": [
+        "handson-ml2", 
+        "machine-learning", 
+        "ml-in-action", 
+        "thinkbayes"
+    ], 
+    "exam/training/cda": [
+        "ag", 
+        "g", 
+        "ut"
+    ], 
+    "personal": [
+        "cases-cda", 
+        "cases-python", 
+        "cda-books", 
+        "cda-training", 
+        "python-programming", 
+        "pythonic"
+    ], 
+    "exam/qa": [
+        "ml-001.md", 
+        "readme.md"
+    ], 
+    "__positions": {
+        "exam/qa/ml-001.md": 2002001, 
+        "reference/handson-ml2": 5001, 
+        "reference": 5, 
+        "exam/training/cda": 2006001, 
+        "exam/case/binary_categorical": 2001001, 
+        "personal/python-programming": 4005, 
+        "exam/cda/examination": 2003002, 
+        "exam/cda/electron": 2003001, 
+        "reference/ml-in-action": 5003, 
+        "exam/training/cda/g": 2006001002, 
+        "exam/cda": 2003, 
+        "personal/pythonic": 4006, 
+        "exam/case/multiclass_matrix": 2001004, 
+        "personal": 4, 
+        "exam/qa": 2002, 
+        "nodes": 3, 
+        "reference/thinkbayes": 5004, 
+        "exam/case": 2001, 
+        "personal/cda-training": 4004, 
+        "personal/cases-python": 4002, 
+        "exam": 2, 
+        "personal/cda-books": 4003, 
+        "exam/qa/readme.md": 2002002, 
+        "nodes/questions": 3003, 
+        "nodes/jupyter": 3001, 
+        "exam/case/binary_numerical": 2001002, 
+        "readme.md": 1, 
+        "exam/run": 2005, 
+        "exam/rui": 2004, 
+        "exam/case/multilabel_classification": 2001005, 
+        "exam/training/cda/ut": 2006001003, 
+        "personal/cases-cda": 4001, 
+        "exam/case/binary_textualized": 2001003, 
+        "exam/training/cda/ag": 2006001001, 
+        "reference/machine-learning": 5002, 
+        "exam/training": 2006, 
+        "nodes/mind": 3002
+    }, 
+    "exam/cda": [
+        "electron", 
+        "examination"
+    ], 
+    "exam/training": [
+        "cda"
+    ], 
+    "nodes": [
+        "jupyter", 
+        "mind", 
+        "questions"
+    ], 
+    "__raw_positions": {
+        "exam/qa/ml-001.md": 1, 
+        "reference/handson-ml2": 1, 
+        "reference": 5, 
+        "exam/training/cda": 1, 
+        "exam/case/binary_categorical": 1, 
+        "personal/python-programming": 5, 
+        "exam/cda/examination": 2, 
+        "exam/cda/electron": 1, 
+        "reference/ml-in-action": 3, 
+        "exam/training/cda/g": 2, 
+        "exam/cda": 3, 
+        "personal/pythonic": 6, 
+        "exam/case/multiclass_matrix": 4, 
+        "personal": 4, 
+        "nodes": 3, 
+        "reference/thinkbayes": 4, 
+        "exam/case": 1, 
+        "personal/cda-training": 4, 
+        "personal/cases-python": 2, 
+        "exam": 2, 
+        "exam/training/cda/ag": 1, 
+        "personal/cda-books": 3, 
+        "exam/qa/readme.md": 2, 
+        "nodes/questions": 3, 
+        "nodes/jupyter": 1, 
+        "exam/case/binary_numerical": 2, 
+        "readme.md": 1, 
+        "exam/run": 5, 
+        "exam/rui": 4, 
+        "exam/case/multilabel_classification": 5, 
+        "exam/training/cda/ut": 3, 
+        "personal/cases-cda": 1, 
+        "exam/case/binary_textualized": 3, 
+        "exam/qa": 2, 
+        "reference/machine-learning": 2, 
+        "exam/training": 6, 
+        "nodes/mind": 2
+    }
+}
