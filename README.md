@@ -13,7 +13,7 @@
 |:---|---|:---|
 |[exam/case](exam/case)|是|CDA考试案例|
 |[exam/cda](exam/examination)|是|「CDA」考试专用库。|
-|[Reference](https://github.com/silentbalanceyh/cda-qa/README.md)|否|Level III 考试题库整理。|
+|[Reference](https://github.com/silentbalanceyh/cda-qa)|否|Level III 考试题库整理。|
 
 ## 1. exam目录
 
