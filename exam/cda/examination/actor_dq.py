@@ -1,10 +1,12 @@
 import gc
+
 from pyecharts.charts import Bar, Page, Pie
 from pyecharts import options as opts
 from examination.toolkit import *
 
 pd.options.display.max_columns = None  # 显示所有列
 pd.set_option('display.float_format', lambda x: '%.2f' % x)  # 取消科学计数法
+pd.set_option("display.max_rows", None)
 
 class DQReport(object):
     def __init__(self, data, Id, target, diff_limit=8, k=5):
@@ -31,10 +33,10 @@ class DQReport(object):
         self.list_kind = list_kind
         feature_df = pd.DataFrame(dict_data, columns=['col_name', 'kinds'])
         self.numeric_list = list(
-            feature_df[(feature_df['kinds'] == 'numeric') & (feature_df['col_name'] != target) & (
+            feature_df[(feature_df['kinds'] == ModeAnalyzer.Numeric) & (feature_df['col_name'] != target) & (
                     feature_df['col_name'] != Id)]['col_name'])
         self.categorical_list = list(
-            feature_df[(feature_df['kinds'] == 'categorical') & (feature_df['col_name'] != target) & (
+            feature_df[(feature_df['kinds'] == ModeAnalyzer.Categorical) & (feature_df['col_name'] != target) & (
                     feature_df['col_name'] != Id)]['col_name'])
         self.feature_df = feature_df
 
@@ -47,7 +49,7 @@ class DQReport(object):
     def re_type(self):
         feature_df = self.feature_df
         for col in self.colname:
-            if feature_df[feature_df['col_name'] == col]['kinds'].values == 'categorical':
+            if feature_df[feature_df['col_name'] == col]['kinds'].values == ModeAnalyzer.Categorical:
                 self.data[col] = self.data[col].astype('object')
             else:
                 self.data[col] = self.data[col].astype('float64')
@@ -111,7 +113,7 @@ class DQReport(object):
             'col_name', 'kinds', 'null', 'null_ratio', 'value', 'value_ratio',
             # 'count of different kinds',
             # 'value of different'
-        ]).T
+        ])
         if save_path is not None:
             data_quality_report_summary.to_csv(save_path, index=False)
         print(data_quality_report_summary)
@@ -126,12 +128,12 @@ class DQReport(object):
         """
         file = data_.copy()
         file.sort_values(by=col, inplace=True)
-        if col_type == 'numeric':
+        if col_type == ModeAnalyzer.Numeric:
             file[col] = pd.cut(file[col], self.k)
             file[col].replace(np.nan, 'unKnow', inplace=True)  # 数值属性切割完成后需要把空值转为unknown
         file[col] = file[col].astype('str')
         list_fea = list(file[col].unique())  # 类别字段-list
-        df_cut = file[[col, target]]
+        df_cut = file[[col, target]].copy()
         df_cut.reset_index(inplace=True)
         col_ = df_cut.groupby([col, target], sort=False)['index'].count().unstack(fill_value=0).stack()
         print('col_\n', col_)
@@ -223,7 +225,7 @@ class DQReport(object):
         for col in self.numeric_list:
             page.add(self.create_graph(page_=page, data_=data, col=col, target=self.target,
                                        new_list_taget=new_list_taget, pyecharts=pyecharts,
-                                       col_type='numeric'))
+                                       col_type=ModeAnalyzer.Numeric))
             describe_ = data[col].describe()
             list_min.append(round(describe_['min'], 2))
             list_max.append(round(describe_['max'], 2))
