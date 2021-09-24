@@ -10,4 +10,4 @@ ex.Answer() \
     .put("Svc", ex.ModSvc) \
     .put("RForest", ex.ModRForest) \
     .put("RForestXGB", ex.ModRForestXGB) \
-    .run(lambda f_modeler: mix_modeling(f_modeler, None))
+    .run_cat(lambda f_modeler: mix_modeling(f_modeler, None))

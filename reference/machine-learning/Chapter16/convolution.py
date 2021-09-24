@@ -40,7 +40,7 @@ if __name__ == '__main__':
     session = tf.InteractiveSession(graph=graph)
 
     # Compute the convolution
-    c_img = session.run([y], feed_dict={x: img.reshape((1, 768, 1024, 1))})
+    c_img = session.run_cat([y], feed_dict={x: img.reshape((1, 768, 1024, 1))})
     n_img = np.array(c_img).reshape((768, 1024))
 
     # Show the final image

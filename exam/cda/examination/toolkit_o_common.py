@@ -1,34 +1,6 @@
 from collections import Counter
-"""
-回归评分
-1. 可解释方差值
-from sklearn.metrics import explained_variance_score
-
-y_true = [3, -0.5, 2, 7]
-y_pred = [2.5, 0.0, 2, 8]
-explained_variance_score(y_true, y_pred) 
-
-y_true = [[0.5, 1], [-1, 1], [7, -6]]
-y_pred = [[0, 2], [-1, 2], [8, -5]]
-explained_variance_score(y_true, y_pred, multioutput='raw_values')
-explained_variance_score(y_true, y_pred, multioutput=[0.3, 0.7])
-
-2. 平均绝对误差
-from sklearn.metrics import mean_absolute_error
-3. 均方误差
-from sklearn.metrics import mean_squared_error
-4. 中值绝对误差
-from sklearn.metrics import median_absolute_error
-5. 决定系数
-from sklearn.metrics import r2_score
-
-r2_score(y_true, y_pred) 
-r2_score(y_true, y_pred, multioutput='variance_weighted')
-r2_score(y_true, y_pred, multioutput='uniform_average')
-r2_score(y_true, y_pred, multioutput='raw_values')
-r2_score(y_true, y_pred, multioutput=[0.3, 0.7])
-"""
-from sklearn.metrics import f1_score, precision_score,accuracy_score,recall_score
+from sklearn.metrics import f1_score, precision_score, accuracy_score, recall_score, explained_variance_score, \
+    mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -94,11 +66,11 @@ def data_split_fn(df_data, p_case, p_radio=0.2, f_target_binary=None):
 
 # ------------------------- 评分和报表
 
-def data_score(df_true, df_predict, f_target, o_target):
+def cat_score(df_true, df_predict, f_target, o_target):
     # ValueError: Classification metrics can't handle a mix of binary and continuous targets
     # 此处可以 astype("int") 或 astype("float") 来解决
-    y_true = df_true[f_target].astype("int")
-    y_pred = df_predict[o_target].astype("int")
+    y_true = df_true[f_target].astype("float")
+    y_pred = df_predict[o_target].astype("float")
     f1 = f1_score(y_true, y_pred, average=None)
     macro = f1_score(y_true, y_pred, average='macro')
     micro = f1_score(y_true, y_pred, average='micro')
@@ -130,6 +102,63 @@ def data_score(df_true, df_predict, f_target, o_target):
         "recall_macro": recall_macro
     }
 
+"""
+回归评分
+1. 可解释方差值
+from sklearn.metrics import explained_variance_score
 
-def data_score_fn(df_true, df_predict, o_target):
-    return lambda f_id, f_target: data_score(df_true, df_predict, f_target, o_target)
+y_true = [3, -0.5, 2, 7]
+y_pred = [2.5, 0.0, 2, 8]
+explained_variance_score(y_true, y_pred) 
+
+y_true = [[0.5, 1], [-1, 1], [7, -6]]
+y_pred = [[0, 2], [-1, 2], [8, -5]]
+explained_variance_score(y_true, y_pred, multioutput='raw_values')
+explained_variance_score(y_true, y_pred, multioutput=[0.3, 0.7])
+
+2. 平均绝对误差
+from sklearn.metrics import mean_absolute_error
+3. 均方误差
+from sklearn.metrics import mean_squared_error
+4. 中值绝对误差
+from sklearn.metrics import median_absolute_error
+5. 决定系数
+from sklearn.metrics import r2_score
+
+r2_score(y_true, y_pred) 
+r2_score(y_true, y_pred, multioutput='variance_weighted')
+r2_score(y_true, y_pred, multioutput='uniform_average')
+r2_score(y_true, y_pred, multioutput='raw_values')
+r2_score(y_true, y_pred, multioutput=[0.3, 0.7])
+"""
+
+def reg_score(df_true, df_predict, f_target, o_target):
+    # ValueError: Classification metrics can't handle a mix of binary and continuous targets
+    # 此处可以 astype("int") 或 astype("float") 来解决
+    y_true = df_true[f_target].astype("float")
+    y_pred = df_predict[o_target].astype("float")
+    explained = explained_variance_score(y_true, y_pred)
+    absolute = mean_absolute_error(y_true, y_pred)
+    squared = mean_squared_error(y_true, y_pred)
+    median = median_absolute_error(y_true, y_pred)
+    r2 = r2_score(y_true, y_pred)
+
+    log_info("可解释方差：\033[31m", explained)
+    log_info("平均绝对误差：\033[31m", absolute)
+    log_info("均方误差：\033[31m", squared)
+    log_info("中值绝对误差：\033[31m", median)
+    log_info("决定系数R2：\033[31m", r2)
+
+    return {
+        'explained': explained,
+        'absolute': absolute,
+        'squared': squared,
+        'median': median,
+        'r2': r2
+    }
+
+def cat_score_fn(df_true, df_predict, o_target):
+    return lambda f_id, f_target: cat_score(df_true, df_predict, f_target, o_target)
+
+def reg_score_fn(df_true, df_predict, o_target):
+    return lambda f_id, f_target: reg_score(df_true, df_predict, f_target, o_target)

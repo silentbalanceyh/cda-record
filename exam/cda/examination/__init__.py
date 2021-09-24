@@ -119,3 +119,6 @@ from examination.modell_lightgbm import *
 
 # Modeling Regression
 from examination.modelr_xgboost import *
+from examination.modelr_lightgbm import *
+from examination.modelr_rf import *
+from examination.modelr_catboost import *

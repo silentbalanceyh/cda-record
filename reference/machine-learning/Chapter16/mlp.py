@@ -57,7 +57,7 @@ if __name__ == '__main__':
         training_step = tf.train.GradientDescentOptimizer(0.025).minimize(loss)
 
     session = tf.InteractiveSession(graph=graph)
-    tf.global_variables_initializer().run()
+    tf.global_variables_initializer().run_cat()
 
     # Run the training cycle
     for e in range(nb_epochs):
@@ -69,10 +69,10 @@ if __name__ == '__main__':
             Xb[:, :] = X_train[i:i + batch_size, :]
             Yb[:, 0] = Y_train[i:i + batch_size]
 
-            loss_value, _ = session.run([loss, training_step], feed_dict={Xt: Xb, Yt: Yb})
+            loss_value, _ = session.run_cat([loss, training_step], feed_dict={Xt: Xb, Yt: Yb})
             total_loss += loss_value
 
-        Y_predicted = session.run([Yo], feed_dict={Xt: X_test.reshape((X_test.shape[0], nb_features))})
+        Y_predicted = session.run_cat([Yo], feed_dict={Xt: X_test.reshape((X_test.shape[0], nb_features))})
         accuracy = 1.0 - (np.sum(np.abs(np.array(Y_predicted[0]).squeeze(axis=1) - Y_test)) / float(Y_test.shape[0]))
 
         print('Epoch %d) Total loss: %.2f - Accuracy: %.2f' % (e, total_loss, accuracy))

@@ -432,7 +432,7 @@ def run_score():
     i_true = exam.csv_target()  # Data4 ----------------------------->
     i_pred = exam.in_runtime(FILE_OUT)
     runner.fn_score(
-        lambda df_true, df_pred: exam.data_score_fn(
+        lambda df_true, df_pred: exam.cat_score_fn(
             df_true=df_true,
             df_predict=df_pred,
             o_target=O_TARGET

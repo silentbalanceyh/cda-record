@@ -28,7 +28,7 @@ from exam_kit import *
 # run_model()
 
 # 步骤4 - Predict
-run_predict()
+# run_predict()
 
 # 步骤5 - Score
 # run_score()

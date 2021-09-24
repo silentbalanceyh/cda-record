@@ -10,4 +10,4 @@ ex.Answer() \
     .put("Svc", ex.ModSvc) \
     .put("RForest", ex.ModRForest) \
     .put("RForestXGB", ex.ModRForestXGB) \
-    .run(mix_modeling)
+    .run_cat(mix_modeling)

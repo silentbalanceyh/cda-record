@@ -1,29 +1,26 @@
-import xgboost as xgb
-from examination.toolkit import *
-import warnings
-warnings.filterwarnings('ignore')
+from lightgbm import LGBMRegressor
 
-class ModRXGBoost(Mod):
+from examination.toolkit import *
+
+
+class ModRLightGBM(Mod):
 
     def execute(self, executor):
         train_x, test_x, train_y, test_y, columns = executor()
         # xgboost
         timeStart = time.time()
-        model = xgb.XGBRegressor(
-            colsample_bytree=0.4,
-            gamma=0,
-            learning_rate=0.07,
+        model = LGBMRegressor(
+            objective='regression',
             max_depth=3,
-            min_child_weight=1.5,
+            learning_rate=0.07,
             n_estimators=10000,
-            reg_alpha=0.75,
-            reg_lambda=0.45,
-            subsample=0.6,
-            seed=42
+            metric='rmse',
+            bagging_fraction=0.8,
+            feature_fraction=0.8
         )
         model.fit(train_x, train_y)
         duration = time.time() - timeStart
-        log_info("（ModRXGBoost）分数：%s, 耗时 %.2f" % (model.score(test_x, test_y), duration))
+        log_info("（ModRLightGBM）分数：%s, 耗时 %.2f" % (model.score(test_x, test_y), duration))
         # 保存当前模型（固定文件名）
         filename = self.__class__.__name__ + ".model"
         out_model(filename, {

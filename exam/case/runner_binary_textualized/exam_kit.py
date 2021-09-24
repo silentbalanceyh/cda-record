@@ -474,13 +474,22 @@ def run_score():
     # /runtime/actor_target.csv
     i_true = ex.csv_target()  # Data4 ----------------------------->
     i_pred = ex.in_runtime(OUT_RESULT)
-    runner.fn_score(
-        lambda df_true, df_pred: ex.data_score_fn(
-            df_true=df_true,
-            df_predict=df_pred,
-            o_target=O_TARGET
+    if CaseType.Regression == CASE:
+        runner.fn_score(
+            lambda df_true, df_pred: ex.reg_score_fn(
+                df_true=df_true,
+                df_predict=df_pred,
+                o_target=O_TARGET
+            )
         )
-    )
+    else:
+        runner.fn_score(
+            lambda df_true, df_pred: ex.cat_score_fn(
+                df_true=df_true,
+                df_predict=df_pred,
+                o_target=O_TARGET
+            )
+        )
     return runner.execute(i_true, RunPhase.Score, i_pred)
 
 # -----------------------------------------------------------------------------------------------------
@@ -520,6 +529,16 @@ def mix_modeling(f_modeler, f_out=None):
             o_id=O_ID,
             o_target=O_TARGET,
             f_outlier=ex.ModeOutlier.Trust
+        )
+    elif CaseType.Regression == CASE:
+        return ex.report_reg(
+            modeler=f_modeler,
+            f_id=V_ID,
+            f_target=V_TARGET,
+            f_features=F_FEATURES,
+            o_filename=f_out,
+            o_id=O_ID,
+            o_target=O_TARGET
         )
 
 

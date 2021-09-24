@@ -45,7 +45,7 @@ if __name__ == '__main__':
         training_step = tf.train.GradientDescentOptimizer(0.025).minimize(loss)
 
     session = tf.InteractiveSession(graph=graph)
-    tf.global_variables_initializer().run()
+    tf.global_variables_initializer().run_cat()
 
     feed_dict = {
         Xt: X,
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     }
 
     for i in range(10000):
-        loss_value, _ = session.run([loss, training_step], feed_dict=feed_dict)
+        loss_value, _ = session.run_cat([loss, training_step], feed_dict=feed_dict)
         if i % 100 == 0:
             print('Step %d, Loss: %.3f' % (i, loss_value))
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
 
-    Z = np.array(session.run([Yc], feed_dict={Xt: np.c_[xx.ravel(), yy.ravel()]}))
+    Z = np.array(session.run_cat([Yc], feed_dict={Xt: np.c_[xx.ravel(), yy.ravel()]}))
 
     # Put the result into a color plot
     Z = Z.reshape(xx.shape)

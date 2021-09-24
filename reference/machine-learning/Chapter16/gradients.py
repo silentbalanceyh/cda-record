@@ -31,7 +31,7 @@ if __name__ == '__main__':
     session = tf.InteractiveSession(graph=graph)
 
     # Compute the gradients
-    X2, dX, d2X = session.run([Y, Yd, Yd2], feed_dict={Xt: X.reshape((nb_points * 2, 1))})
+    X2, dX, d2X = session.run_cat([Y, Yd, Yd2], feed_dict={Xt: X.reshape((nb_points * 2, 1))})
 
     # Plot the gradients
     fig, ax = plt.subplots(1, 3, figsize=(20, 5))
