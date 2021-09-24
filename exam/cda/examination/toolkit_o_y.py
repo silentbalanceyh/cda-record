@@ -1,7 +1,7 @@
-
 from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer, LabelBinarizer
 from collections import Counter
 from examination.toolkit_i_io import *
+
 
 def y_columns(f_id, f_target):
     """
@@ -16,6 +16,7 @@ def y_columns(f_id, f_target):
     else:
         indexes = indexes + f_target
     return indexes
+
 
 def y_combine(y_test, y_predict):
     left = y_test.values
@@ -32,8 +33,9 @@ def y_combine(y_test, y_predict):
         # 多类型专用
         return np.hstack((left.reshape(-1, 1), right))
 
+
 def y_revert(df_binary, f_source, f_target):
-    encoder = MultiLabelBinarizer(classes = f_source)
+    encoder = MultiLabelBinarizer(classes=f_source)
     encoder.fit(f_source)
 
     df_y = df_binary[f_source]
@@ -41,6 +43,6 @@ def y_revert(df_binary, f_source, f_target):
     np_y = []
     for item in df_y_pre:
         np_y.append(item[0])
-    df_out = df_binary.drop(f_source, axis = 1)
+    df_out = df_binary.drop(f_source, axis=1)
     df_out[f_target] = np_y
     return df_out

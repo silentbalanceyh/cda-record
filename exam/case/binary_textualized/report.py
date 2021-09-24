@@ -10,6 +10,6 @@ dataDf = exam.Answer()\
     .put("Svc", exam.ModSvc)\
     .put("RForest", exam.ModRForest)\
     .put("RForestXGB", exam.ModRForestXGB)\
-    .output(run_txt)
+    .build(run_txt)
 print("\033[30m")
 print(dataDf)

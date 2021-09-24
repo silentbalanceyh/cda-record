@@ -1,10 +1,10 @@
 import pickle
 import pandas as pd
-import numpy as np                              # Not Remove
+import numpy as np  # Not Remove
 from gensim.models import Word2Vec
 
 from examination.toolkit_i_logger import *
-from examination.toolkit_i_class import *       # Not Remove
+from examination.toolkit_i_class import *  # Not Remove
 from sklearn.datasets import load_svmlight_file
 
 pd.set_option('display.width', 270)
@@ -28,11 +28,13 @@ def __in_file(filename=None):
     else:
         return pd.read_csv(filename, encoding=ENCODING, low_memory=False)
 
-def __out_file(df, filename = None):
+
+def __out_file(df, filename=None):
     if filename.endswith("xlsx"):
         df.to_excel(filename)
     else:
         df.to_csv(filename, encoding=ENCODING, index=False, sep=',')
+
 
 def in_data(filename=None):
     if filename is None:
@@ -47,7 +49,8 @@ def in_runtime(filename=None):
     else:
         return __in_file(PATH_RUNTIME + filename)
 
-def out_data(df, filename = None):
+
+def out_data(df, filename=None):
     if filename is None:
         log_error("对不起，请传入 filename 文件名")
     else:

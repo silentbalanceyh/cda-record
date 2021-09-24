@@ -1,46 +1,25 @@
-"""
-Exam Tool（考试专用工具包）
-导入自定义工具
-
-「注」：
-df_test 表示验证集
-df_train 表示训练集
-"""
-import examination as exam
 # -----------------------------------------------------------------------------------------------------
 #
 # 「数据输入区」
 #
 # -----------------------------------------------------------------------------------------------------
-# --------------------- 常量定义 ----------------------
-# 目标属性
+from constant import *
 from examination import RunPhase, CaseType
 
-V_ID = "ID"  # 数据源主键属性名
-V_TARGET = "Target"  # 数据源中的目标属性名
-V_TARGET_BINARY = ["a1", "a2", "a3"]  # 「保留备用」数据源中的目标属性集（多个名称，Y为矩阵）
-# 业务属性
-V_TITLE = "title"  # 文本分析中的标题属性
-V_CONTENT = "content"  # 文本分析中的内容属性
-V_FEATURES = ["f1", "f2", "f3"]  # 分类分析中的特征属性集
-# 输出属性
-O_ID = "ID"  # 输出预测文件属性名
-O_TARGET = "Target"  # 输出预测文件属性值
-# 选择模型
-MODELER = exam.ModLightGBM
 # --------------------- 构造Actor调度器 ---------------------------
-runner = exam.Actor(
+# 目录初始化
+if not os.path.exists("runtime"):
+    os.makedirs("runtime")
+if not os.path.exists("model"):
+    os.makedirs("model")
+
+runner = ex.Actor(
     V_ID,
     V_TARGET,
     # f_classes=len(V_TARGET_BINARY) --- 多分类时使用
     # p_case="actor" --- 统一文件名专用案例前缀
 )
-FILE_MODEL = MODELER.__name__ + ".model"
-FILE_OUT = MODELER.__name__ + ".csv"
-FILE_DATA_0 = "training.xlsx"
-FILE_DATA_1 = "training_data.csv"
 # ---------------------------------------------------------------
-
 
 # 数据部分
 # Data1：原始训练文件
@@ -70,23 +49,23 @@ Phase 0「特殊步骤」
 """
 
 
-def run_format():
+def run_revert():
     # 原始数据源文件
     # 输入：
     # /data/training.xlsx
-    df_binary = exam.in_data(FILE_DATA_0)  # Data0 ----------------------------->
-    df_out = exam.y_revert(
+    df_binary = ex.in_data(IN_PRE)  # Data0 ----------------------------->
+    df_out = ex.y_revert(
         df_binary,  # 原始训练集
-        f_source=V_TARGET_BINARY,  # 原始属性名，Array结构
+        f_source=V_TARGETS,  # 原始属性名，Array结构
         f_target=V_TARGET  # 目标属性名，String结构
     )
-    exam.log_matrix("还原过后的数据：", df_out.shape)
+    ex.log_matrix("还原过后的数据：", df_out.shape)
 
     # 生成新数据源文件
     # 输出：
     # /data/training_data.csv
-    exam.out_data(df_out, FILE_DATA_1)  # ----------------------------> Data1
-    exam.log_success("「00」格式转换完成！")
+    ex.out_data(df_out, IN_SOURCE)  # ----------------------------> Data1
+    ex.log_success("「00」格式转换完成！")
 
 
 # --------------------- Phase 1：拆分数据集 ----------------------
@@ -134,16 +113,16 @@ def run_splitting():
     # 新数据源文件
     # 输入：
     # /data/training_data.csv
-    df_data = exam.in_data(FILE_DATA_1)  # Data1 -------------------------->
+    df_data = ex.in_data(IN_SOURCE)  # Data1 -------------------------->
     runner.fn_split(
         # 拆分数据集专用函数
         #   data_df - 输入数据集
         #   p_case - 当前案例名称，默认 actor 前缀
-        lambda data_df, p_case: exam.data_split_fn(
+        lambda data_df, p_case: ex.data_split_fn(
             df_data=data_df,  # 原始训练集
             p_case=p_case,  # 对应Case名
             p_radio=0.2,  # 训练和验证集比例
-            f_target_binary=V_TARGET_BINARY  # （多分类）专用
+            f_target_binary=V_TARGETS  # （多分类）专用
         )
     )
 
@@ -246,31 +225,31 @@ Phase 2，特征提取
 """
 
 
-def run_feature(f_type):
+def run_feature():
     # 训练数据源，测试数据源
     # 输入：
     # /runtime/actor_train.csv
     # /runtime/actor_csv.csv
-    i_train = exam.csv_train()  # Data2 ----------------------------->
-    if CaseType.Textual == f_type:
-        i_test = exam.csv_test()  # Data3 ----------------------------->
+    i_train = ex.csv_train()  # Data2 ----------------------------->
+    if CaseType.Textual == CASE:
+        i_test = ex.csv_test()  # Data3 ----------------------------->
         runner.fn_pre(
             # 特征工程
             #   df_train: 训练集
-            lambda df_train: exam.txt_feature_fn(
+            lambda df_train: ex.txt_feature_fn(
                 df_train=df_train,  # 训练集
                 df_test=i_test,  # 验证集（生成文本测试专用向量矩阵）
                 # f_title=V_TITLE,      # 包含标题
-                f_content=V_CONTENT  # 文本内容
+                f_content=F_CONTENT  # 文本内容
             )
         )
-    elif CaseType.Binary == f_type:
+    elif CaseType.Binary == CASE:
         runner.fn_pre(
             # 特征工程
             #   df_train: 训练集
-            lambda df_train: exam.cat_feature_fn(
+            lambda df_train: ex.cat_feature_fn(
                 df_train=df_train,
-                f_categorical=V_FEATURES  # 分类中影响结果的特征集
+                f_categorical=F_FEATURES  # 分类中影响结果的特征集
             )
         )
     # 输出
@@ -335,8 +314,8 @@ Phase 3，训练模型
 def run_model():
     # 输入：
     # /runtime/actor_train_feature.csv
-    i_feature = exam.csv_feature()  # Data5 ----------------------------->
-    runner.fn_run_before(exam.data_modeling_fn) \
+    i_feature = ex.csv_feature()  # Data5 ----------------------------->
+    runner.fn_run_before(ex.data_modeling_fn) \
         .fn_run(MODELER)
     # 输出
     # /model/XXX.model（模型文件）
@@ -383,29 +362,29 @@ Phase 4，预测数据集
 """
 
 
-def run_predict(f_type):
+def run_predict():
     # 输入：
     # /runtime/actor_test.csv
-    i_test = exam.csv_test()  # Data3 ----------------------------->
-    if CaseType.Textual == f_type:
+    i_test = ex.csv_test()  # Data3 ----------------------------->
+    if CaseType.Textual == CASE:
         runner.fn_predict(
-            lambda df_test: exam.txt_predict_fn(
+            lambda df_test: ex.txt_predict_fn(
                 df_test=df_test,
-                f_model=FILE_MODEL,
+                f_model=OUT_MODEL,
                 o_id=O_ID,
                 o_target=O_TARGET,
-                o_filename=FILE_OUT
+                o_filename=OUT_RESULT
             )
         )
-    elif CaseType.Binary == f_type:
+    elif CaseType.Binary == CASE:
         runner.fn_predict(
-            lambda df_test: exam.cat_predict_fn(
+            lambda df_test: ex.cat_predict_fn(
                 df_test=df_test,
-                f_model=FILE_MODEL,
-                f_categorical=V_FEATURES,
+                f_model=OUT_MODEL,
+                f_categorical=F_FEATURES,
                 o_id=O_ID,
                 o_target=O_TARGET,
-                o_filename=FILE_OUT
+                o_filename=OUT_RESULT
             )
         )
     # 输出
@@ -429,10 +408,10 @@ Phase 5, 评分
 def run_score():
     # 输入：
     # /runtime/actor_target.csv
-    i_true = exam.csv_target()  # Data4 ----------------------------->
-    i_pred = exam.in_runtime(FILE_OUT)
+    i_true = ex.csv_target()  # Data4 ----------------------------->
+    i_pred = ex.in_runtime(OUT_RESULT)
     runner.fn_score(
-        lambda df_true, df_pred: exam.data_score_fn(
+        lambda df_true, df_pred: ex.data_score_fn(
             df_true=df_true,
             df_predict=df_pred,
             o_target=O_TARGET
@@ -446,32 +425,11 @@ def run_score():
 # 「混合逻辑区域」
 #
 # -----------------------------------------------------------------------------------------------------
-#  标准流程
-def run_case(f_type, f_phase=None):
-    if f_phase is None:
-        run_splitting()
-        run_feature(f_type)
-        run_model()
-        run_predict(f_type)
-        run_score()
-    else:
-        if RunPhase.Split == f_phase:
-            run_splitting()
-        elif RunPhase.Pre == f_phase:
-            run_feature(f_type)
-        elif RunPhase.Model == f_phase:
-            run_model()
-        elif RunPhase.Predict == f_phase:
-            run_predict(f_type)
-        else:
-            run_score()
-
-
 #  组合流程
 #       常用1：预测 + 评分
-def run_mix(f_modeler, f_out, f_type):
-    if CaseType.Textual == f_type:
-        return exam.report_txt(
+def mix_modeling(f_modeler, f_out):
+    if CaseType.Textual == CASE:
+        return ex.report_txt(
             modeler=f_modeler,
             f_id=V_ID,
             f_target=V_TARGET,
@@ -479,39 +437,25 @@ def run_mix(f_modeler, f_out, f_type):
             o_id=O_ID,
             o_target=O_TARGET
         )
-    elif CaseType.Binary == f_type:
-        return exam.report_cat(
+    elif CaseType.Binary == CASE:
+        return ex.report_cat(
             modeler=f_modeler,
             f_id=V_ID,
             f_target=V_TARGET,
-            f_features=V_FEATURES,
+            f_features=F_FEATURES,
             o_filename=f_out,
             o_id=O_ID,
             o_target=O_TARGET
         )
 
-#  组合流程
-#       常用2：算法报表
-def run_report(f_type):
-    dataDf = exam.Answer() \
-        .put("Catboost", exam.ModCatboost) \
-        .put("LightGBM", exam.ModLightGBM) \
-        .output(lambda f_modeler, _: run_mix(f_modeler, None, f_type))
-    print("\033[30m")
-    print(dataDf)
 
 #  组合流程
 #       常用3：最终考试
-def run_exam(f_type):
+def run_exam():
     # 做一次文件转换
     # 原训练集 -> runtime/actor_train.csv
     # 原测试集 -> runtime/actor_test.csv
-    run_feature(f_type)
+    run_feature()
     run_model()
-    run_predict(f_type)
-# -----------------------------------------------------------------------------------------------------
-#
-# 「代码执行区域」
-#
-# -----------------------------------------------------------------------------------------------------
+    run_predict()
 

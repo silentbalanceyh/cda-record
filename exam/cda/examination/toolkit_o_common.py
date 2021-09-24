@@ -6,8 +6,10 @@ from sklearn.model_selection import train_test_split
 from examination.toolkit_o_y import *
 from examination.estimator_onezero import PreOneZeroEncoder
 
+
 def __file_out(flag, p_case): return PATH_RUNTIME + (
     "%s.csv" % flag if p_case is None else "%s_%s.csv" % (p_case, flag))
+
 
 # ------------------------- 数据集处理
 
@@ -36,7 +38,6 @@ def data_split(df_data, f_id, f_target, p_case=None, p_radio=0.2, f_target_binar
             target_df[f_target] = encoder.fit_transform(target_df[f_target])
             out_model("MultiEncoder.encoder", {'content': encoder})
 
-
     file_train = __file_out("train", p_case)
     log_message("训练数据集：%s" % file_train)
     log_message("训练集Y：", dict(Counter(train_df[indexes])))
@@ -60,6 +61,7 @@ def data_split(df_data, f_id, f_target, p_case=None, p_radio=0.2, f_target_binar
 
 def data_split_fn(df_data, p_case, p_radio=0.2, f_target_binary=None):
     return lambda f_id, f_target: data_split(df_data, f_id, f_target, p_case, p_radio, f_target_binary)
+
 
 # ------------------------- 评分和报表
 

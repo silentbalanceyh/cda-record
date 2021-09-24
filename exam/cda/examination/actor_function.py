@@ -1,8 +1,8 @@
-
 from examination.phase_common import *
 from examination.phase_txt import *
 from examination.phase_cat import *
 from examination.actor_runner import *
+
 
 def report_tpl(keys=None):
     if keys is None:
@@ -19,6 +19,7 @@ def report_tpl(keys=None):
         "R_Ma": []
     }
 
+
 def report_add(tpl, row):
     tpl['Sec'].append(row['duration'])
     tpl['Acc'].append(row['accuracy'])
@@ -28,6 +29,7 @@ def report_add(tpl, row):
     tpl['P_Ma'].append(row['precision_macro'])
     tpl['R_Mi'].append(row['recall_micro'])
     tpl['R_Ma'].append(row['recall_macro'])
+
 
 def report_txt(modeler, f_id, f_target, o_id, o_target, o_filename=None, f_classes=None):
     i_feature = csv_feature()
@@ -46,6 +48,7 @@ def report_txt(modeler, f_id, f_target, o_id, o_target, o_filename=None, f_class
     params = data_score(df_true, df_predict, f_target, o_target)
     params['duration'] = duration
     return params
+
 
 def report_cat(modeler, f_id, f_target, o_id, o_target, f_features, o_filename=None):
     i_feature = csv_feature()

@@ -1,5 +1,6 @@
 from examination.actor_function import *
 
+
 class Answer:
     def __init__(self):
         self.report = {}
@@ -8,7 +9,7 @@ class Answer:
         self.report[name] = modeler
         return self
 
-    def output(self, executor):
+    def build(self, executor):
         keys = self.report.keys()
         tpl = report_tpl(keys)
         for key in keys:
@@ -17,3 +18,8 @@ class Answer:
             params = executor(modeler, key + ".csv")
             report_add(tpl, params)
         return pd.DataFrame(tpl)
+
+    def run(self, executor):
+        data_df = self.build(executor)
+        print("\033[30m")
+        print(data_df)

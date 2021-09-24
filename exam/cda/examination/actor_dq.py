@@ -5,7 +5,7 @@ from pyecharts import options as opts
 from examination.toolkit import *
 
 pd.options.display.max_columns = None  # 显示所有列
-pd.set_option('display.float_format', lambda x: '%.2f' % x)  # 取消科学计数法
+# pd.set_option('display.float_format', lambda x: '%.2f' % x)  # 取消科学计数法
 pd.set_option("display.max_rows", None)
 
 class DQReport(object):
