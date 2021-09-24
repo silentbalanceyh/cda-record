@@ -40,9 +40,12 @@ class PreOutlier(BaseEstimator, TransformerMixin):
                 # 平均值法
                 min_ = round(describe_['mean'] - 3 * describe_['std'], 2)
                 max_ = round(describe_['mean'] + 3 * describe_['std'], 2)
+            elif ModeOutlier.Trust == self.mode:
+                # 5% 和 95%
+                min_ = round(X[col].quantile(0.05), 2)
+                max_ = round(X[col].quantile(0.95), 2)
             else:
                 log_warn("不支持的侦测方法！方法 = %s" % self.mode)
-
             # 修改对应值
             X.loc[X[col] < min_, col] = min_
             X.loc[X[col] > max_, col] = max_

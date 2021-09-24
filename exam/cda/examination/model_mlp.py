@@ -10,9 +10,10 @@ class ModMLP(Mod):
         timeStart = time.time()
         model = MLPClassifier(
             hidden_layer_sizes=(100, 100),
-            alpha=0.0001,
+            alpha=0.001,
             max_iter=1000,
-            random_state=0
+            random_state=0,
+            early_stopping=True
         )
         model.fit(train_x, train_y)
         duration = time.time() - timeStart

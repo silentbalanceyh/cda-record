@@ -252,6 +252,17 @@ def run_feature():
                 f_categorical=F_FEATURES  # 分类中影响结果的特征集
             )
         )
+    elif CaseType.Numeric == CASE:
+        runner.fn_pre(
+            # 特征工程
+            #   df_train: 训练集
+            lambda df_train: ex.cat_feature_fn(
+                df_train=df_train,
+                f_categorical=F_FEATURES, # 分类中影响结果的特征集
+                f_outlier=ex.ModeOutlier.Trust,
+                f_dq="actor_train_normalized.csv"
+            )
+        )
     # 输出
     # /runtime/actor_train_feature.csv
     runner.execute(i_train, RunPhase.Pre)  # ----------------------------> Data5
@@ -387,6 +398,18 @@ def run_predict():
                 o_filename=OUT_RESULT
             )
         )
+    elif CaseType.Numeric == CASE:
+        runner.fn_predict(
+            lambda df_test: ex.cat_predict_fn(
+                df_test=df_test,
+                f_model=OUT_MODEL,
+                f_categorical=F_FEATURES,
+                o_id=O_ID,
+                o_target=O_TARGET,
+                o_filename=OUT_RESULT,
+                f_outlier=ex.ModeOutlier.Trust
+            )
+        )
     # 输出
     # /runtime/Mod.csv（根据选择模型名称而定）
     return runner.execute(i_test, RunPhase.Predict)
@@ -427,7 +450,7 @@ def run_score():
 # -----------------------------------------------------------------------------------------------------
 #  组合流程
 #       常用1：预测 + 评分
-def mix_modeling(f_modeler, f_out):
+def mix_modeling(f_modeler, f_out=None):
     if CaseType.Textual == CASE:
         return ex.report_txt(
             modeler=f_modeler,
@@ -446,6 +469,17 @@ def mix_modeling(f_modeler, f_out):
             o_filename=f_out,
             o_id=O_ID,
             o_target=O_TARGET
+        )
+    elif CaseType.Numeric == CASE:
+        return ex.report_cat(
+            modeler=f_modeler,
+            f_id=V_ID,
+            f_target=V_TARGET,
+            f_features=F_FEATURES,
+            o_filename=f_out,
+            o_id=O_ID,
+            o_target=O_TARGET,
+            f_outlier=ex.ModeOutlier.Trust
         )
 
 

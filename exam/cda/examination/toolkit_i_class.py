@@ -7,6 +7,7 @@ class ModeOutlier(Enum):
     MaxMin = "M"  # 过大/过小值
     Cap = "C"  # 平均值法
     Quartile = "Q"  # 四分位法
+    Trust = "T" # 95%,5% 的盖帽法
 
 
 class ModeAnalyzer(Enum):

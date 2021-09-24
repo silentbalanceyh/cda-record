@@ -50,7 +50,7 @@ def report_txt(modeler, f_id, f_target, o_id, o_target, o_filename=None, f_class
     return params
 
 
-def report_cat(modeler, f_id, f_target, o_id, o_target, f_features, o_filename=None):
+def report_cat(modeler, f_id, f_target, o_id, o_target, f_features, o_filename=None, f_outlier=None):
     i_feature = csv_feature()
     i_test = csv_test()
     runner = Actor(f_id, f_target).fn_run_before(data_modeling_fn).fn_run(modeler)
@@ -60,7 +60,8 @@ def report_cat(modeler, f_id, f_target, o_id, o_target, f_features, o_filename=N
         f_categorical=f_features,
         o_id=o_id,
         o_target=o_target,
-        o_filename=o_filename
+        o_filename=o_filename,
+        f_outlier=f_outlier
     ))
     df_predict, duration = runner.execute(i_feature, RunPhase.Mix_MT, i_test)
     # 预测

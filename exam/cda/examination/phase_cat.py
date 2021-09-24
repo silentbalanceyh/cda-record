@@ -1,4 +1,3 @@
-
 from examination.toolkit import *
 from examination.estimator_wrong import PreWrong
 from examination.estimator_outlier import PreOutlier
@@ -13,14 +12,14 @@ from sklearn.pipeline import Pipeline
 # ------------------------- 私有函数
 
 
-def __cat_normalize(x, categorical_features=None, encoder=None):
+def __cat_normalize(x, outlier=ModeOutlier.Quartile, categorical_features=None, encoder=None):
     if categorical_features is None:
         categorical_features = []
     log_info("步骤1：数据预处理 - Wrong，Outlier")
     pipe = Pipeline([
         ('Wrong_Na', PreWrong(wrong_value=['.', '?'])),
         # XGB 忽略
-        ('Outlier', PreOutlier(mode=ModeOutlier.Quartile))
+        ('Outlier', PreOutlier(mode=outlier))
     ])
     # 此处不执行y值
     x = pipe.fit_transform(x)
@@ -54,8 +53,10 @@ def __cat_normalize(x, categorical_features=None, encoder=None):
 
 # ------------------------- 特征工程
 
-def cat_feature(df_train, f_id, f_target, f_categorical=None):
+def cat_feature(df_train, f_id, f_target, f_categorical=None, f_outlier=ModeOutlier.Quartile, f_dq=None):
     """
+    :param f_dq:
+    :param f_outlier:
     :param df_train: 训练数据集
     :param f_id: ID字段
     :param f_target: 目标字段
@@ -66,6 +67,8 @@ def cat_feature(df_train, f_id, f_target, f_categorical=None):
     log_matrix("（训练）数据Shape：", df_train.shape)
     log_matrix("（训练）数据目标列：", Counter(df_train[f_target]))
     # --> 结构：ID + Feature + Target
+    if f_dq is not None:
+        out_runtime(df_train, f_dq)
     df_train.drop(f_id, inplace=True, axis=1)
     # --> 结构：Feature + Target
 
@@ -80,7 +83,7 @@ def cat_feature(df_train, f_id, f_target, f_categorical=None):
     log_matrix("（训练）目标列标签化：", df_y)
     df_x = df_train.drop(f_target, axis=1)
     log_matrix("（训练）结构（之前）：", df_x.shape, df_y.shape)
-    np_x = __cat_normalize(df_x, f_categorical)
+    np_x = __cat_normalize(df_x, categorical_features=f_categorical, outlier=f_outlier)
     log_matrix("（训练）结构（中间）：", np_x.shape, df_y.shape)
     out_df = pd.DataFrame(np_x, dtype=float)
     out_df[f_target] = df_y
@@ -89,15 +92,15 @@ def cat_feature(df_train, f_id, f_target, f_categorical=None):
     return out_df
 
 
-def cat_feature_fn(df_train, f_categorical):
-    return lambda f_id, f_target: cat_feature(df_train, f_id, f_target, f_categorical)
-
+def cat_feature_fn(df_train, f_categorical, f_outlier=ModeOutlier.Quartile, f_dq=None):
+    return lambda f_id, f_target: cat_feature(df_train, f_id, f_target, f_categorical, f_outlier, f_dq)
 
 
 # ------------------------- 预测
 
-def cat_predict(df_test, f_id, f_columns, f_categorical=None):
+def cat_predict(df_test, f_id, f_columns, f_categorical=None, f_outlier=ModeOutlier.Quartile):
     """
+    :param f_outlier:
     :param df_test: 测试数据
     :param f_id:    目标ID字段
     :param f_columns: 训练集列信息
@@ -111,14 +114,14 @@ def cat_predict(df_test, f_id, f_columns, f_categorical=None):
     y_test = df_test[f_id]
     x_test = df_test.drop(f_id, axis=1)
     oneHot = in_model("OneHot.encoder", 'content')
-    np_x = __cat_normalize(x_test, categorical_features=f_categorical, encoder=oneHot)
+    np_x = __cat_normalize(x_test, categorical_features=f_categorical, encoder=oneHot, outlier=f_outlier)
     log_matrix("（测试）结构（中间）：", np_x.shape, y_test.shape)
     x_test = pd.DataFrame(np_x, dtype=float, columns=f_columns)
     log_matrix("（测试）准备完成：", x_test.shape, y_test.shape)
     return x_test, y_test
 
 
-def cat_predict_fn(df_test, f_model, f_categorical, o_id, o_target, o_filename=None):
+def cat_predict_fn(df_test, f_model, f_categorical, o_id, o_target, o_filename=None, f_outlier=ModeOutlier.Quartile):
     # 内部预测函数
     def predict_fn(f_id, f_target=None):
         log_info("--------> 选择模型：\033[31m%s" % f_model)
@@ -126,7 +129,7 @@ def cat_predict_fn(df_test, f_model, f_categorical, o_id, o_target, o_filename=N
         mod = in_model(f_model)
         f_columns = in_model(f_model, 'columns')
 
-        x_test, y_test = cat_predict(df_test, f_id, f_columns, f_categorical)
+        x_test, y_test = cat_predict(df_test, f_id, f_columns, f_categorical, f_outlier)
         y_predict = mod.predict(x_test)
 
         # Y 两次处理（单类和多类）

@@ -1,3 +1,4 @@
+import os.path
 import pickle
 import pandas as pd
 import numpy as np  # Not Remove
@@ -75,10 +76,13 @@ def out_w2(model, filename):
 
 
 def in_model(filename, key="content"):
-    with open(PATH_MODEL + filename, 'rb') as file:
-        modelData = pickle.load(file)
-        model = modelData[key]
-    return model
+    if os.path.exists(PATH_MODEL + filename):
+        with open(PATH_MODEL + filename, 'rb') as file:
+            modelData = pickle.load(file)
+            model = modelData[key]
+        return model
+    else:
+        return None
 
 
 def in_w2(filename):

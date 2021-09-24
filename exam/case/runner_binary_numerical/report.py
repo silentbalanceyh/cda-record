@@ -7,7 +7,6 @@ ex.Answer() \
     .put("LightGBM", ex.ModLightGBM) \
     .put("XGBoost", ex.ModXGBoost) \
     .put("Mlp", ex.ModMLP) \
-    .put("Svc", ex.ModSvc) \
     .put("RForest", ex.ModRForest) \
     .put("RForestXGB", ex.ModRForestXGB) \
     .run(mix_modeling)

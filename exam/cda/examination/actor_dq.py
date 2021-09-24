@@ -8,6 +8,7 @@ pd.options.display.max_columns = None  # 显示所有列
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)  # 取消科学计数法
 pd.set_option("display.max_rows", None)
 
+
 class DQReport(object):
     def __init__(self, data, Id, target, diff_limit=8, k=5):
         """
@@ -215,17 +216,22 @@ class DQReport(object):
         gc.collect()
         return page_
 
-    def NReport(self, csv_save_path=None, pyecharts=False, html_save_path='./html/numeric_analyse.html'):
+    def NDataFrame(self, executor=None):
         data = self.data.copy()
-        list_min, list_max, list_mean, list_std, list_mean_sub_std, list_mean_add_std, list_Q1, list_Q3, \
-        list_quartile_min, list_quartile_max = [], [], [], [], [], [], [], [], [], []
+        list_min = []  # 最小值
+        list_max = []  # 最大值
+        list_mean = []  # 均值
+        list_std = []  # 标准差
+        list_mean_sub_std = []  # 均值 - 3 x 标准差
+        list_mean_add_std = []  # 均值 + 3 x 标准差
+        list_Q1 = []  # 四分位数 Q1
+        list_Q3 = []  # 四分位数 Q3
+        list_quartile_min = []  # Q1 - 1.5 x IQR
+        list_quartile_max = []  # Q3 + 1.5 x IQR
 
-        page = Page()
-        new_list_taget = data[self.target].value_counts(ascending=True).index  # 目标-list
         for col in self.numeric_list:
-            page.add(self.create_graph(page_=page, data_=data, col=col, target=self.target,
-                                       new_list_taget=new_list_taget, pyecharts=pyecharts,
-                                       col_type=ModeAnalyzer.Numeric))
+            if executor is not None:
+                executor(col)
             describe_ = data[col].describe()
             list_min.append(round(describe_['min'], 2))
             list_max.append(round(describe_['max'], 2))
@@ -238,16 +244,40 @@ class DQReport(object):
             IQR = round(describe_['75%'] - describe_['25%'], 2)
             list_quartile_min.append(round(describe_['25%'] - 1.5 * IQR, 2))
             list_quartile_max.append(round(describe_['75%'] + 1.5 * IQR, 2))
-        if pyecharts:
-            page.page_title = 'numeric'  # html标签
-            page.render(html_save_path)
 
         dict_data = {'numeric_name': self.numeric_list, 'Min': list_min, 'Max': list_max, 'Mean': list_mean,
                      'StDev': list_std,
                      'M-3': list_mean_sub_std, 'M+3': list_mean_add_std, 'Q1': list_Q1, 'Q3': list_Q3,
                      'Q1-1.5*IQR': list_quartile_min, 'Q3+1.5*IQR': list_quartile_max}
-        data_quality_report_numeric = pd.DataFrame(dict_data, columns=[
-            'numeric_name', 'Min', 'Max', 'Mean', 'StDev', 'M-3', 'M+3', 'Q1', 'Q3', 'Q1-1.5*IQR', 'Q3+1.5*IQR'])
+        return pd.DataFrame(dict_data, columns=[
+            'numeric_name',
+            'Min',
+            'Max',
+            'Mean',
+            'StDev',
+            'M-3',
+            'M+3',
+            'Q1',
+            'Q3',
+            'Q1-1.5*IQR',
+            'Q3+1.5*IQR']
+                            )
+
+    def NReport(self, csv_save_path=None, pyecharts=False, html_save_path='./html/numeric_analyse.html'):
+        data = self.data.copy()
+
+        page = Page()
+        new_list_taget = data[self.target].value_counts(ascending=True).index  # 目标-list
+        if pyecharts:
+            page.page_title = 'numeric'  # html标签
+            page.render(html_save_path)
+
+        data_quality_report_numeric = self.NDataFrame(
+            lambda col: page.add(self.create_graph(page_=page, data_=data, col=col, target=self.target,
+                                                   new_list_taget=new_list_taget, pyecharts=pyecharts,
+                                                   col_type=ModeAnalyzer.Numeric)
+                                 )
+        )
 
         if csv_save_path is not None:
             data_quality_report_numeric.to_csv(csv_save_path, index=False)
