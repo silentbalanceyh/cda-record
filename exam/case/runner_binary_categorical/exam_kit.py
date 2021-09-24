@@ -5,7 +5,7 @@
 # -----------------------------------------------------------------------------------------------------
 from constant import *
 from examination import RunPhase, CaseType
-
+import os
 # --------------------- 构造Actor调度器 ---------------------------
 # 目录初始化
 if not os.path.exists("runtime"):
