@@ -263,6 +263,17 @@ def run_feature():
                 f_dq="actor_train_normalized.csv"
             )
         )
+    elif CaseType.TextualMulti == CASE:
+        i_test = ex.csv_test()  # Data3 ----------------------------->
+        runner.fn_pre(
+            # 特征工程
+            # df_train: 训练集
+            lambda df_train: ex.txt_feature_m_fn(
+                df_train=df_train,
+                df_test=i_test,        # 此处需要测试集同时执行分词操作
+                f_content=F_CONTENT
+            )
+        )
     # 输出
     # /runtime/actor_train_feature.csv
     runner.execute(i_train, RunPhase.Pre)  # ----------------------------> Data5

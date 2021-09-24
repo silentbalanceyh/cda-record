@@ -25,6 +25,7 @@ class CaseType(Enum):
     Numeric = "Numeric"  # 回归类
     Binary = "Binary"  # 二分类
     Multi = "Multi"  # 多分类
+    TextualMulti = "TextualMulti",    # 多分类文本
     MultiLabel = "MultiLabel"  # 多标签
     Textual = "Textual"  # 文本挖掘
 
