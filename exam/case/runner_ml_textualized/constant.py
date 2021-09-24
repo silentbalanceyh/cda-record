@@ -54,5 +54,6 @@ IN_SOURCE = "training-data.csv"
 # 算法选择
 CASE = ex.CaseType.TextualMulti
 MODELER = ex.ModVLightGBM
+CLASSES = len(V_TARGETS)
 OUT_MODEL = MODELER.__name__ + ".model"
 OUT_RESULT = MODELER.__name__ + ".csv"

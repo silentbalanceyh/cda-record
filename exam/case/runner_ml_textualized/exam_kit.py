@@ -12,14 +12,10 @@ if not os.path.exists("runtime"):
     os.makedirs("runtime")
 if not os.path.exists("model"):
     os.makedirs("model")
-
-length = 0
-if V_TARGETS is not None:
-    length = len(V_TARGETS)
 runner = ex.Actor(
     V_ID,
     V_TARGET,
-    f_classes=length,
+    f_classes=CLASSES,
     # f_classes=len(V_TARGET_BINARY) --- 多分类时使用
     # p_case="actor" --- 统一文件名专用案例前缀
 )

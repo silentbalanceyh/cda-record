@@ -190,7 +190,8 @@ def txt_predict_m_fn(df_test, f_model, o_id, o_target, o_filename=None):
         y_predict = mod.predict(x_test)
         # Y 两次处理（单类和多类）
         encoder = in_model("MultiEncoder.encoder")
-        y_predict = encoder.fit_transform(y_predict)
+        if encoder is not None:
+            y_predict = encoder.fit_transform(y_predict)
 
         np_out = y_combine(y_test, y_predict)
         columns = y_columns(o_id, o_target)

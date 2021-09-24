@@ -67,5 +67,6 @@ IN_SOURCE = "Train_all.xlsx"
 # 算法选择
 CASE = ex.CaseType.Binary
 MODELER = ex.ModLightGBM
+CLASSES = len(V_TARGET)
 OUT_MODEL = MODELER.__name__ + ".model"
 OUT_RESULT = MODELER.__name__ + ".csv"

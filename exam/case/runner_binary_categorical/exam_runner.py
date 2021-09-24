@@ -19,7 +19,7 @@ from exam_kit import *
 #
 # -----------------------------------------------------------------------------------------------------
 # 步骤1 - Splitting
-run_splitting()
+# run_splitting()
 
 # 步骤2 - Feature
 # run_feature()

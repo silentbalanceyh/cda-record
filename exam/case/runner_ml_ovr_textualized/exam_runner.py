@@ -25,7 +25,7 @@ from exam_kit import *
 # run_feature()
 
 # 步骤3 - Modeling
-run_model()
+# run_model()
 
 # 步骤4 - Predict
 # run_predict()

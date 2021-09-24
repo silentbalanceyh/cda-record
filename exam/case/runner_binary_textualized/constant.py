@@ -54,5 +54,6 @@ IN_SOURCE = "training_ori.csv"
 # 算法选择
 CASE = ex.CaseType.Textual
 MODELER = ex.ModLightGBM
+CLASSES = None
 OUT_MODEL = MODELER.__name__ + ".model"
 OUT_RESULT = MODELER.__name__ + ".csv"
