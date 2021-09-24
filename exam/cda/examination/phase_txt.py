@@ -179,3 +179,23 @@ def txt_predict_fn(df_test, f_model, o_id, o_target, o_filename=None):
         return pd.DataFrame(np_out, columns=columns), o_filename
 
     return predict_fn
+
+def txt_predict_m_fn(df_test, f_model, o_id, o_target, o_filename=None):
+    # 内部预测函数
+    def predict_fn(f_id, f_target=None):
+        log_info("--------> 选择模型：\033[31m%s" % f_model)
+        mod = in_model(f_model)
+        f_columns = in_model(f_model, 'columns')
+        x_test, y_test = txt_predict(df_test, f_id, f_columns)
+        y_predict = mod.predict(x_test)
+        # Y 两次处理（单类和多类）
+        encoder = in_model("MultiEncoder.encoder")
+        y_predict = encoder.fit_transform(y_predict)
+
+        np_out = y_combine(y_test, y_predict)
+        columns = y_columns(o_id, o_target)
+
+        log_success("----->「第四步」预测结果输出完成！")
+        return pd.DataFrame(np_out, columns=columns), o_filename
+
+    return predict_fn

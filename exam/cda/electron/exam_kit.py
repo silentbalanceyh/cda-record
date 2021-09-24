@@ -13,9 +13,13 @@ if not os.path.exists("runtime"):
 if not os.path.exists("model"):
     os.makedirs("model")
 
+length = 0
+if V_TARGETS is not None:
+    length = len(V_TARGETS)
 runner = ex.Actor(
     V_ID,
     V_TARGET,
+    f_classes=length,
     # f_classes=len(V_TARGET_BINARY) --- 多分类时使用
     # p_case="actor" --- 统一文件名专用案例前缀
 )
@@ -421,6 +425,16 @@ def run_predict():
                 f_outlier=ex.ModeOutlier.Trust
             )
         )
+    elif CaseType.TextualMulti == CASE:
+        runner.fn_predict(
+            lambda df_test: ex.txt_predict_m_fn(
+                df_test=df_test,
+                f_model=OUT_MODEL,
+                o_id=O_ID,
+                o_target=O_TARGET,
+                o_filename=OUT_RESULT
+            )
+        )
     # 输出
     # /runtime/Mod.csv（根据选择模型名称而定）
     return runner.execute(i_test, RunPhase.Predict)
@@ -452,7 +466,6 @@ def run_score():
         )
     )
     return runner.execute(i_true, RunPhase.Score, i_pred)
-
 
 # -----------------------------------------------------------------------------------------------------
 #

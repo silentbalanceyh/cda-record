@@ -36,7 +36,7 @@ F_FEATURES = []
 # O_ID                                                      - 输出——主键
 # O_TARGET                                                  - 输出——目标属性
 O_ID = "ID"
-O_TARGET = ["none", "disgust", "like", "happiness", "sadness", "surprise", "anger", "fear"]
+O_TARGET = "Target"
 
 # -- 文件部分
 # IN_PRE                                                    - 处理前文件（执行预处理后生成 IN_SOURCE，有可能无此步骤）

@@ -46,3 +46,22 @@ def y_revert(df_binary, f_source, f_target):
     df_out = df_binary.drop(f_source, axis=1)
     df_out[f_target] = np_y
     return df_out
+
+def y_transform(df_binary, f_source, f_target):
+    encoder = MultiLabelBinarizer(classes=f_source)
+    df_y = df_binary[f_target]
+    # 由于是多标签，所以需要使用这种方式来处理最终结果，记住此处是二维数组
+    df_y_m = []
+    for item in df_y:
+        df_y_m.append([item])
+    df_y_post = encoder.fit_transform(df_y_m)
+    df_binary = df_binary.copy()
+    df_binary = df_binary.drop(f_target, axis=1)
+    df_binary[f_source] = df_y_post
+    return df_binary
+
+def y_result_1(df_binary, f_target):
+    df_binary = df_binary.copy()
+    encoder = in_model("MultiEncoder.encoder")
+    df_binary[f_target] = encoder.inverse_transform(df_binary[f_target])
+    return df_binary
