@@ -14,9 +14,8 @@ class ModRLightGBM(Mod):
             max_depth=3,
             learning_rate=0.07,
             n_estimators=10000,
-            metric='rmse',
-            bagging_fraction=0.8,
-            feature_fraction=0.8
+            reg_alpha=0.75,
+            reg_lambda=0.45,
         )
         model.fit(train_x, train_y)
         duration = time.time() - timeStart
