@@ -467,13 +467,6 @@ def run_score():
     )
     return runner.execute(i_true, RunPhase.Score, i_pred)
 
-def run_y1():
-    # 输入：
-    # /runtime/actor_target.csv
-    i_true = ex.csv_target()  # Data4 ----------------------------->
-    i_true = ex.y_result_1(i_true, V_TARGET)
-    ex.out_runtime(i_true, "actor_results.csv")
-
 # -----------------------------------------------------------------------------------------------------
 #
 # 「混合逻辑区域」

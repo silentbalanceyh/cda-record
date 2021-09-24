@@ -1,5 +1,4 @@
-from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer, LabelBinarizer
-from collections import Counter
+from sklearn.preprocessing import MultiLabelBinarizer
 from examination.toolkit_i_io import *
 
 
