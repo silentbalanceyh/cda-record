@@ -1,8 +1,34 @@
 from collections import Counter
+"""
+回归评分
+1. 可解释方差值
+from sklearn.metrics import explained_variance_score
 
-from sklearn.metrics import f1_score, precision_score
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import recall_score
+y_true = [3, -0.5, 2, 7]
+y_pred = [2.5, 0.0, 2, 8]
+explained_variance_score(y_true, y_pred) 
+
+y_true = [[0.5, 1], [-1, 1], [7, -6]]
+y_pred = [[0, 2], [-1, 2], [8, -5]]
+explained_variance_score(y_true, y_pred, multioutput='raw_values')
+explained_variance_score(y_true, y_pred, multioutput=[0.3, 0.7])
+
+2. 平均绝对误差
+from sklearn.metrics import mean_absolute_error
+3. 均方误差
+from sklearn.metrics import mean_squared_error
+4. 中值绝对误差
+from sklearn.metrics import median_absolute_error
+5. 决定系数
+from sklearn.metrics import r2_score
+
+r2_score(y_true, y_pred) 
+r2_score(y_true, y_pred, multioutput='variance_weighted')
+r2_score(y_true, y_pred, multioutput='uniform_average')
+r2_score(y_true, y_pred, multioutput='raw_values')
+r2_score(y_true, y_pred, multioutput=[0.3, 0.7])
+"""
+from sklearn.metrics import f1_score, precision_score,accuracy_score,recall_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 

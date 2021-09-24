@@ -8,6 +8,17 @@ class ModLightGBM(Mod):
         train_x, test_x, train_y, test_y, columns = executor()
         # lightBGM
         timeStart = time.time()
+        """回归
+        model_lgb = lgb.LGBMRegressor(
+                            objective='regression',
+                            max_depth = 3,
+                            learning_rate=0.1, 
+                            n_estimators=3938,
+                            metric='rmse', 
+                            bagging_fraction = 0.8,
+                            feature_fraction = 0.8
+        )
+        """
         model = LGBMClassifier(
             n_estimators=1000,          # 拟合树的数量
             boosting_type='gbdt',       # 设置提升类型
