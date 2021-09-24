@@ -22,12 +22,13 @@ class EncoderType(Enum):
 
 
 class CaseType(Enum):
-    Numeric = "Numeric"  # 回归类
-    Binary = "Binary"  # 二分类
-    Multi = "Multi"  # 多分类
-    TextualMulti = "TextualMulti",    # 多分类文本
-    MultiLabel = "MultiLabel"  # 多标签
-    Textual = "Textual"  # 文本挖掘
+    Numeric = "Numeric"  # 二分类（侧重数值）
+    Binary = "Binary"  # 二分类（侧重类别）
+    Multi = "Multi"  # 多分类（二维表）
+    Textual = "Textual"  # 二分类（文本）
+    TextualMulti = "TextualMulti",    # 多分类（文本）
+    LabelMulti = "MultiLabel",  # 多标签（侧重类别）
+    Regression = "Regression"   # 回归问题
 
 
 class RunPhase(Enum):

@@ -83,6 +83,7 @@ from examination.toolkit import *
 # Pre
 from examination.phase_cat import *
 from examination.phase_txt import *
+from examination.phase_reg import *
 from examination.phase_common import *
 
 # Actor
@@ -115,3 +116,6 @@ from examination.modelm_xgboost import *
 
 # Modeling Multi Label
 from examination.modell_lightgbm import *
+
+# Modeling Regression
+from examination.modelr_xgboost import *

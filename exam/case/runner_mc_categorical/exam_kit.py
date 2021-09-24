@@ -274,6 +274,15 @@ def run_feature():
                 f_content=F_CONTENT
             )
         )
+    elif CaseType.Regression == CASE:
+        runner.fn_pre(
+            # 特征工程
+            #   df_train: 训练集
+            lambda df_train: ex.reg_feature_fn(
+                df_train=df_train,
+                f_categorical=F_FEATURES  # 分类中影响结果的特征集
+            )
+        )
     # 输出
     # /runtime/actor_train_feature.csv
     runner.execute(i_train, RunPhase.Pre)  # ----------------------------> Data5
@@ -426,6 +435,17 @@ def run_predict():
             lambda df_test: ex.txt_predict_m_fn(
                 df_test=df_test,
                 f_model=OUT_MODEL,
+                o_id=O_ID,
+                o_target=O_TARGET,
+                o_filename=OUT_RESULT
+            )
+        )
+    elif CaseType.Regression == CASE:
+        runner.fn_predict(
+            lambda df_test: ex.reg_predict_fn(
+                df_test=df_test,
+                f_model=OUT_MODEL,
+                f_categorical=F_FEATURES,
                 o_id=O_ID,
                 o_target=O_TARGET,
                 o_filename=OUT_RESULT
