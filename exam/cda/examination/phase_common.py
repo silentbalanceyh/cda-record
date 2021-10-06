@@ -50,11 +50,11 @@ def data_modeling(df_feature, f_target):
     log_matrix("（训练）准备完成：", x_train.shape, y_train.shape)
     columns = x_train.columns
 
-    x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size=0.18)
     # SMOTE 是否有必要？？？根据 Counter(df_feature[f_target]) 结果来处理
     is_smote = __xy_rate(counter)
-    if is_smote:
-        x_train, y_train = __xy_smote(x_train, y_train)
+    # if is_smote:
+        # x_train, y_train = __xy_smote(x_train, y_train)
     log_matrix("（训练）结构（最终）：", x_train.shape, y_train.shape)
     log_matrix("（验证）结构（最终）：", x_test.shape, y_test.shape)
     return x_train, x_test, y_train, y_test, columns

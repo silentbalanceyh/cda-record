@@ -14,7 +14,7 @@ def __file_out(flag, p_case): return PATH_RUNTIME + (
 
 # ------------------------- 数据集处理
 
-def data_split(df_data, f_id, f_target, p_case=None, p_radio=0.2, f_target_binary=None):
+def data_split(df_data, f_id, f_target, p_case=None, p_radio=0.16, f_target_binary=None):
     """
     :param df_data: 全数据集
     :param f_id:    ID字段名
@@ -86,7 +86,7 @@ def cat_score(df_true, df_predict, f_target, o_target):
     recall_macro = recall_score(y_true, y_pred, average="macro")
 
     log_info("F1宏观 Macro：\033[31m", macro)
-    log_info("F2微观 Micro：\033[31m", micro)
+    log_info("F1微观 Micro：\033[31m", micro)
     log_info("准确率 Accuracy：\033[31m", accuracy)
     log_info("精确率宏观 Precision Macro：\033[31m", precision_macro)
     log_info("精确率微观 Precision Micro：\033[31m", precision_micro)

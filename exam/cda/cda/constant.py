@@ -22,21 +22,21 @@ import examination as ex
 # V_ID                                                      - 主键
 # V_TARGET                                                  - 目标属性（单个）
 # V_TARGETS                                                 - 目标属性（多个）
-V_ID = "CustomerID"
-V_TARGET = "SeriousDlqin2yrs"
-V_TARGETS = None    # ["a1", "a2", "a3"]
+V_ID = "CID"
+V_TARGET = "Recommended IND"
+V_TARGETS = []
 
 # F_TITLE                                                   - 「文本」文本中的标题属性
 # F_CONTENT                                                 - 「文本」文本中的内容属性
 # F_FEATURES                                                - 「二维表」特征属性集
-F_TITLE = "title"
-F_CONTENT = "text"
-F_FEATURES = []
+F_TITLE = "Title"
+F_CONTENT = "Review Text"
+F_FEATURES = None
 
 # O_ID                                                      - 输出——主键
 # O_TARGET                                                  - 输出——目标属性
-O_ID = "CustomerID"
-O_TARGET = "SeriousDlqin2yrs"
+O_ID = "CID"
+O_TARGET = "Predicted_Results"
 
 # -- 文件部分
 # IN_PRE                                                    - 处理前文件（执行预处理后生成 IN_SOURCE，有可能无此步骤）
@@ -44,7 +44,7 @@ O_TARGET = "SeriousDlqin2yrs"
 # OUT_MODEL                                                 - 模型输出
 # OUT_RESULT                                                - 结果输出
 IN_PRE = "training.xlsx"
-IN_SOURCE = "cs-actor_training.csv"
+IN_SOURCE = "actor_training.csv"
 
 # -----------------------------------------------------------------------------------------------------
 #
@@ -52,8 +52,8 @@ IN_SOURCE = "cs-actor_training.csv"
 #
 # -----------------------------------------------------------------------------------------------------
 # 算法选择
-CASE = ex.CaseType.Numeric
+CASE = ex.CaseType.Textual
 MODELER = ex.ModLightGBM
-CLASSES = None
+CLASSES = None if V_TARGETS is None else len(V_TARGETS)
 OUT_MODEL = MODELER.__name__ + ".model"
 OUT_RESULT = MODELER.__name__ + ".csv"

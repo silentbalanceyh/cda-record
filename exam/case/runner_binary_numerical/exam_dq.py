@@ -1,7 +1,7 @@
 # et: Exam Tool（考试专用工具包）
 from constant import *
 # 原始数据
-i_data = ex.in_data("cs-training.csv")
+i_data = ex.in_data("cs-actor_training.csv")
 report = ex.DQReport(i_data,V_ID, V_TARGET)
 # NReport
 dt = report.NDataFrame()
